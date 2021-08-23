@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProyectoAPI", "ProyectoAPI\ProyectoAPI.csproj", "{95E561E2-FAA6-4448-B748-A852ADFB6BC6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A80475A0-9A8B-4D9F-9842-9DB467C57992} = {A80475A0-9A8B-4D9F-9842-9DB467C57992}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArbolB", "ArbolB\ArbolB.csproj", "{A80475A0-9A8B-4D9F-9842-9DB467C57992}"
 EndProject
