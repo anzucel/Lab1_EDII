@@ -66,7 +66,37 @@ namespace ListaDobleEnlace
             Nodo<T> NodoAdd = new Nodo<T>();
             NodoAdd.Valor = NuevoValor;
 
-            if (!ListaVacia())
+            if (contador >= 0)
+            {
+                if (Posicion == 0)
+                {
+                    InsertarInicio(NodoAdd.Valor);
+                }
+                else if (Posicion == contador)
+                {
+                    InsertarFinal(NodoAdd.Valor);
+                }
+                else if (Posicion > 0 && Posicion < contador + 1)
+                {
+                    Nodo<T> auxiliar = inicio;
+                    int pos = 0;
+
+                    while ((pos < Posicion))
+                    {
+                        auxiliar = auxiliar.Siguiente;
+                        pos++;
+                    }
+
+                    auxiliar.Anterior.Siguiente = NodoAdd;
+                    NodoAdd.Siguiente = auxiliar;
+                    NodoAdd.Anterior = auxiliar.Anterior;
+                    auxiliar.Anterior = NodoAdd;
+
+                    contador++;
+                }
+            }
+
+            /*if (!ListaVacia())
             {
                 Nodo<T> auxiliar = inicio;
                 int pos = 0;
@@ -88,7 +118,7 @@ namespace ListaDobleEnlace
                     NodoAdd.Siguiente = auxiliar;
                     contador++;
                 }
-            }
+            }*/
         }
 
         public void InsertarFinal(T NuevoValor)
@@ -130,7 +160,7 @@ namespace ListaDobleEnlace
                     else
                     {
                         Nodo<T> auxiliar = inicio;
-                        int pos = 1;
+                        int pos = 0;
 
                         while ((pos < posicion))
                         {
@@ -139,6 +169,7 @@ namespace ListaDobleEnlace
                         }
                         auxiliar.Anterior.Siguiente = auxiliar.Siguiente;
                         auxiliar.Siguiente.Anterior = auxiliar.Anterior;
+                        temporal = auxiliar; //linea extra
                         contador--;
                     }
                 }
@@ -189,13 +220,25 @@ namespace ListaDobleEnlace
 
             if (!ListaVacia())
             {
-                inicio = inicio.Siguiente;
+                if (contador == 1)
+                {
+                    fin = inicio;
+                }
+                else
+                {
+                    inicio = inicio.Siguiente;
+                    inicio.Anterior = null;
+                }
+                contador--;
+
+                /*inicio = inicio.Siguiente;
                 inicio.Anterior = null;
                 if (contador == 1)
                 {
                     fin = inicio;
                 }
                 contador--;
+            }*/
             }
             return temporal;
         }

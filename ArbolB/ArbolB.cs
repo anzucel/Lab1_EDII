@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 namespace ArbolB
 {
-    public class ArbolB<T> where T: IComparable
+    public class ArbolB<L> where L: IComparable
     {
         private static int grado; //grado del arbol, se enviará dentro del constructor
-        private NodoArbol<T> raiz; 
+        private NodoArbol<L> raiz; 
 
         private class NodoArbol<T> where T : IComparable {
             public bool hoja = true;
@@ -45,8 +45,11 @@ namespace ArbolB
                     {
                         if (Listahoja.ObtenerValor(i).CompareTo(Listahoja.ObtenerValor(j)) > 0)
                         {
-                            temporal = Listahoja.ObtenerValor(i);
+                            /*temporal = Listahoja.ObtenerValor(i);
                             Listahoja.InsertarEnPosicion(Listahoja.ObtenerValor(j), i);
+                            Listahoja.InsertarEnPosicion(temporal, j);*/
+                            temporal = Listahoja.ExtraerEnPosicion(i).Valor;
+                            Listahoja.InsertarEnPosicion(Listahoja.ExtraerEnPosicion(j-1).Valor, i);
                             Listahoja.InsertarEnPosicion(temporal, j);
                         }
                     }
@@ -63,15 +66,15 @@ namespace ArbolB
         public ArbolB(int Grado)
         {
             grado = Grado;
-            raiz = new NodoArbol<T>(null); //raiz no tiene padre 
+            raiz = new NodoArbol<L>(null); //raiz no tiene padre 
         }
 
-        public void Insertar(T valor) 
+        public void Insertar(L valor) 
         {
             raiz = InsertarNodo(valor, raiz); // se modifica la referencia del objeto
         }
 
-        private NodoArbol<T> InsertarNodo(T valor, NodoArbol<T> temporal) //inserta o encuentra la ruta correcta
+        private NodoArbol<L> InsertarNodo(L valor, NodoArbol<L> temporal) //inserta o encuentra la ruta correcta
         {
             if(temporal.hoja)
             {
@@ -83,11 +86,11 @@ namespace ArbolB
                     // nodo raíz lleno
                     if (temporal.padre == null)
                     {
-                        NodoArbol<T> pivote = temporal;
-                        temporal = new NodoArbol<T>(null);
+                        NodoArbol<L> pivote = temporal;
+                        temporal = new NodoArbol<L>(null);
                         temporal.InsertarValor(pivote.Listahoja.ObtenerValor(grado / 2)); //valor medio en el padre
-                        temporal.hijo[0] = new NodoArbol<T>(temporal);
-                        temporal.hijo[1] = new NodoArbol<T>(temporal);
+                        temporal.hijo[0] = new NodoArbol<L>(temporal);
+                        temporal.hijo[1] = new NodoArbol<L>(temporal);
                         //hijo izq.
                         for (int i = 0; i < grado/2; i++)
                         {
@@ -103,7 +106,7 @@ namespace ArbolB
                     else
                     {
                         // toma el valor medio y lo sube al padre
-                        T valor_medio = temporal.Listahoja.ObtenerValor(grado / 2);
+                        L valor_medio = temporal.Listahoja.ObtenerValor(grado / 2);
                         temporal.padre.InsertarValor(valor_medio);
                         int posicion = 0;
                         //encuentra la posición desde donde debe separar
@@ -120,13 +123,13 @@ namespace ArbolB
                             temporal.padre.hijo[i] = temporal.padre.hijo[i - 1];
                         }
                         // se crea el nuevo hijo con referencia al nodo padre 
-                        temporal.padre.hijo[posicion + 1] = new NodoArbol<T>(temporal.padre);
+                        temporal.padre.hijo[posicion + 1] = new NodoArbol<L>(temporal.padre);
                         for (int i = (grado / 2) + 1; i < grado; i++)
                         {
                             temporal.padre.hijo[posicion + 1].InsertarValor(temporal.Listahoja.ObtenerValor(i));
                         }
-                        NodoArbol<T> aux = temporal;
-                        temporal.padre.hijo[posicion] = new NodoArbol<T>(temporal.padre);
+                        NodoArbol<L> aux = temporal;
+                        temporal.padre.hijo[posicion] = new NodoArbol<L>(temporal.padre);
                         for (int i = 0; i < grado/2; i++)
                         {
                             temporal.padre.hijo[posicion].InsertarValor(aux.Listahoja.ObtenerValor(i));
