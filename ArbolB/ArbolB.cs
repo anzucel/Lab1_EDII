@@ -25,13 +25,26 @@ namespace ArbolB
 
             public void InsertarValor(T valor) //inserta dentro de nodo hoja
             {
-                if(Cant_valores <= grado)
+                bool insertar = true;
+                for (int i = 0; i <= this.Listahoja.contador; i++)
                 {
-                    this.Listahoja.InsertarInicio(valor);
-                    Cant_valores++;
+                    if (valor.CompareTo(Listahoja.ObtenerValor(i)) == 0)
+                    {
+                        insertar = false;
+                        break;
+                    }
                 }
-                if (Cant_valores > 1)
-                    Ordenar();
+
+                if (insertar)
+                {
+                    if (Cant_valores <= grado)
+                    {
+                        this.Listahoja.InsertarInicio(valor);
+                        Cant_valores++;
+                    }
+                    if (Cant_valores > 1)
+                        Ordenar();
+                }
             }
 
             private void Ordenar()
@@ -271,6 +284,10 @@ namespace ArbolB
             }
             return temporal;
         }
+
+
+
+
 
         public void Imprimir()
         {

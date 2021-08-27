@@ -8,11 +8,13 @@ namespace ArbolConsola
         {
             ArbolB.ArbolB<int> arbol = new ArbolB.ArbolB<int>(5);
             arbol.Insertar(12);
+            arbol.Insertar(12);
             arbol.Insertar(63);
             arbol.Insertar(40);
             arbol.Insertar(73);
             arbol.Insertar(78);
             arbol.Insertar(59);
+            arbol.Insertar(57);
             arbol.Insertar(57);
             arbol.Insertar(29);
             arbol.Insertar(51);
