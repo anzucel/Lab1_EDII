@@ -214,7 +214,7 @@ namespace ListaDobleEnlace
             return default(Nodo<T>);
         }
 
-        Nodo<T> ExtraerInicio()
+        public Nodo<T> ExtraerInicio()
         {
             Nodo<T> temporal = inicio;
 
