@@ -307,5 +307,139 @@ namespace ArbolB
             }
         }
         //eliminar
+
+
+        public void eliminar(L Valor)
+        {
+            NodoArbol<L> vervalor = raiz;
+            EliminarNodo(Valor, raiz);
+
+            return;
+        }
+
+        private NodoArbol<L> EliminarNodo(L valor, NodoArbol<L> Raiz_P)
+        {
+
+            if (Raiz_P.hoja) //verifica si es una hoja
+            {
+
+                if (raiz == Raiz_P)//verifica si es la raiz de nuestro árbol
+                {
+                    for (int i = 0; i < Raiz_P.Cant_valores; i++)
+                    {
+                        if (Raiz_P.Listahoja.ObtenerValor(i).CompareTo(valor) == 0)
+                        {
+
+                            Raiz_P.Listahoja.ExtraerEnPosicion(i);
+                            Raiz_P.Cant_valores--;
+                            return Raiz_P;
+                        }
+                    }
+                }
+
+
+                else //busca en las hojas
+                {
+
+                    for (int i = 0; i < Raiz_P.Cant_valores; i++) //busca en la hoja el valor
+                    {
+                        if (Raiz_P.Listahoja.ObtenerValor(i).CompareTo(valor) == 0)
+                        {
+                            if (Raiz_P.Cant_valores > ((grado - 1) / 2))//Verifica si cumple con la cantidad mínima
+                            {
+                                Raiz_P.Listahoja.ExtraerEnPosicion(i);
+                                Raiz_P.Cant_valores--;
+                                return Raiz_P;
+                            }
+
+
+                            else //Sino cumple con la cantidad mínima
+                            {
+                                int padre_R = PosicionPadre(Raiz_P.padre, valor);
+                                if (padre_R == 0 && Raiz_P.padre.hijo[padre_R + 1].Cant_valores > (grado - 1) / 2)
+                                {
+                                    Raiz_P.Listahoja.ObtenerValor(i, Raiz_P.padre.Listahoja.ObtenerValor(padre_R));
+                                    Raiz_P.padre.Listahoja.ObtenerValor(padre_R, Raiz_P.padre.hijo[padre_R + 1].Listahoja.ObtenerValor(0));
+                                    Raiz_P.padre.hijo[padre_R + 1].Listahoja.ExtraerEnPosicion(0);
+                                }
+
+                                Raiz_P.Listahoja.ObtenerValor(0, valor);
+
+                            }
+
+                            //Raiz_P.Listahoja.ExtraerEnPosicion(i);
+                            //Raiz_P.Cant_valores--;
+                        }
+
+                    }
+                }
+
+
+            }
+            else //eliminacion de padres
+            {
+                bool encontrado = false;
+                bool mayor = true;
+                if (Raiz_P.hoja == false) //Verifica si aun sigue buscando entre los padres
+                {
+                    for (int i = 0; i < Raiz_P.Cant_valores; i++)//Busca si existe en la listahoja
+                    {
+                        if (Raiz_P.Listahoja.ObtenerValor(i).CompareTo(valor) == 0)
+                        {
+                            //Eliminar padre
+                            encontrado = true;
+                            return Raiz_P;
+                        }
+
+                    }
+
+                    if (encontrado != true)
+                    {
+                        for (int i = 0; i < Raiz_P.Cant_valores; i++)//busca cual es menor para seguir el recorrido de busqueda
+                        {
+                            if (Raiz_P.Listahoja.ObtenerValor(i).CompareTo(valor) > 0)
+                            {
+                                Raiz_P = Raiz_P.hijo[i];
+                                mayor = false;
+                                EliminarNodo(valor, Raiz_P);
+
+                                return Raiz_P;
+                                //Eliminar padre
+                            }
+
+                        }
+                        if (mayor = true)
+                        {
+                            Raiz_P = Raiz_P.hijo[Raiz_P.Cant_valores];
+                            EliminarNodo(valor, Raiz_P);
+                        }
+                    }
+
+
+                }
+                else
+                {
+                }
+
+            }
+
+            return Raiz_P;
+        }
+
+
+        int PosicionPadre(NodoArbol<L> Padre, L valor) //Busca en la lista padre que nodo es el padre
+        {
+            for (int i = 0; i < Padre.Cant_valores; i++)
+            {
+                if (Padre.Listahoja.ObtenerValor(i).CompareTo(valor) > 0)
+                {
+                    return i;
+                }
+            }
+            return Padre.Cant_valores - 1; ;
+        }
     }
 }
+
+
+  

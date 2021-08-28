@@ -27,7 +27,11 @@ namespace ArbolConsola
             arbol.Insertar(80);
             arbol.Insertar(41);
             arbol.Insertar(25);
+            arbol.Insertar(42);
+            arbol.Insertar(26);
 
+
+            arbol.eliminar(26);
             arbol.Imprimir();
             /*
             int opcion, grado, cant_datos;

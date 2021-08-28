@@ -195,6 +195,25 @@ namespace ListaDobleEnlace
             return default(T);
         }
 
+        public T ObtenerValor(int posicion, T value) //sobre carga para poder cambiar los valores pero no las propiedades del nodo
+        {
+            if (posicion >= 0 && posicion < contador)
+            {
+
+                Nodo<T> temporal = new Nodo<T>();
+                temporal = inicio;
+                int ubicacion = 0;
+
+                while (ubicacion < posicion)
+                {
+                    temporal = temporal.Siguiente;
+                    ubicacion++;
+                }
+                temporal.Valor = value;
+                return temporal.Valor;
+            }
+            return default(T);
+        }
 
         public Nodo<T> ObtenerNodo(int posicion)
         {
