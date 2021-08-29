@@ -262,7 +262,7 @@ namespace ListaDobleEnlace
             return temporal;
         }
 
-        Nodo<T> ExtraerFinal()
+       public  Nodo<T> ExtraerFinal()
         {
             Nodo<T> temporal = fin;
 

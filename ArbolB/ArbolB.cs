@@ -4,22 +4,25 @@ using System.Collections.Generic;
 
 namespace ArbolB
 {
-    public class ArbolB<L> where L: IComparable
+    public class ArbolB<L> where L : IComparable
     {
         private static int grado; //grado del arbol, se enviará dentro del constructor
-        private NodoArbol<L> raiz; 
+        private NodoArbol<L> raiz;
 
-        private class NodoArbol<T> where T : IComparable {
+        private class NodoArbol<T> where T : IComparable
+        {
             public bool hoja = true;
             public int Cant_valores = 0; //Registro de la cantidad de valores que tiene cierto nodo, va a incrementar
 
             public ListaDoble<T> Listahoja = new ListaDoble<T>();
 
-            public NodoArbol<T>[] hijo = new NodoArbol<T>[grado+1]; // referencia a los hijos de un nodo, n 
+
+            public NodoArbol<T>[] hijo = new NodoArbol<T>[grado + 1]; // referencia a los hijos de un nodo, n 
 
             public NodoArbol<T> padre; // referencia hacia el nodo padre
 
-            public NodoArbol(NodoArbol<T> padre) {
+            public NodoArbol(NodoArbol<T> padre)
+            {
                 this.padre = padre;
             }
 
@@ -50,14 +53,14 @@ namespace ArbolB
             private void Ordenar()
             {
                 T temporal;
-                for (int i = 0; i < Listahoja.contador-1; i++)
+                for (int i = 0; i < Listahoja.contador - 1; i++)
                 {
-                    for (int j = i+1; j < Listahoja.contador; j++)
+                    for (int j = i + 1; j < Listahoja.contador; j++)
                     {
                         if (Listahoja.ObtenerValor(i).CompareTo(Listahoja.ObtenerValor(j)) > 0)
                         {
                             temporal = Listahoja.ExtraerEnPosicion(i).Valor;
-                            Listahoja.InsertarEnPosicion(Listahoja.ExtraerEnPosicion(j-1).Valor, i);
+                            Listahoja.InsertarEnPosicion(Listahoja.ExtraerEnPosicion(j - 1).Valor, i);
                             Listahoja.InsertarEnPosicion(temporal, j);
                         }
                     }
@@ -82,7 +85,7 @@ namespace ArbolB
             raiz = new NodoArbol<L>(null); //raiz no tiene padre 
         }
 
-        public void Insertar(L valor) 
+        public void Insertar(L valor)
         {
             raiz = InsertarNodo(valor, raiz); // se modifica la referencia del objeto
         }
@@ -125,7 +128,7 @@ namespace ArbolB
                 {
                     // toma el valor medio y lo sube al padre
                     L valor_medio = temporal.Listahoja.ObtenerValor(grado / 2);
-                    temporal.padre.InsertarValor(valor_medio); 
+                    temporal.padre.InsertarValor(valor_medio);
                     int posicion = 0;
                     //encuentra la posición desde donde debe separar
                     for (int i = 0; i < temporal.padre.Cant_valores; i++)
@@ -136,7 +139,7 @@ namespace ArbolB
                         }
                     }
                     //entra si el nodo padre es el que se debe dividir 
-                    if (temporal.padre.Cant_valores == grado) 
+                    if (temporal.padre.Cant_valores == grado)
                     {
                         for (int i = temporal.padre.Cant_valores; i > posicion; i--)
                         {
@@ -171,7 +174,7 @@ namespace ArbolB
                             temporal.padre.hijo[posicion].InsertarValor(aux.Listahoja.ObtenerValor(i));
                             if (!pivote.hoja)
                             {
-                                for (int j = 0, k =0 ; j < grado/2 + 1; j++, k++)
+                                for (int j = 0, k = 0; j < grado / 2 + 1; j++, k++)
                                 {
                                     temporal.padre.hijo[posicion].hijo[k] = pivote.hijo[j];
                                     if (pivote.hijo[j] != null)
@@ -221,7 +224,7 @@ namespace ArbolB
                                 }
                             }
 
-                            for (int i = (grado/2) + 1, k = 0; i < grado + 1; i++, k++)
+                            for (int i = (grado / 2) + 1, k = 0; i < grado + 1; i++, k++)
                             {
                                 for (int j = 0; j < pivote.hijo[i].Cant_valores; j++)
                                 {
@@ -231,8 +234,8 @@ namespace ArbolB
                             }
 
                             temporal.padre.hijo[posicion].hoja = false;
-                            temporal.padre.hijo[posicion+1].hoja = false;
-                        }  
+                            temporal.padre.hijo[posicion + 1].hoja = false;
+                        }
                     }
                 }
             }
@@ -264,7 +267,7 @@ namespace ArbolB
                 int contador = 0;
                 for (int i = 0, j = 0 - ((grado / 2) + 1); i <= grado; i++, j++)
                 {
-                    if (i <= grado/2)
+                    if (i <= grado / 2)
                     {
                         temporal.hijo[0].hijo[i] = new NodoArbol<L>(temporal.hijo[0]);
                         temporal.hijo[0].hijo[i] = pivote.hijo[contador];
@@ -314,31 +317,24 @@ namespace ArbolB
             NodoArbol<L> vervalor = raiz;
             EliminarNodo(Valor, raiz);
 
+
             return;
         }
 
         private NodoArbol<L> EliminarNodo(L valor, NodoArbol<L> Raiz_P)
         {
 
-            if (Raiz_P.hoja) //verifica si es una hoja
+            //Paso 1 verificar si estamos en una hoja
+            if (Raiz_P.hoja)
             {
 
-                if (raiz == Raiz_P)//verifica si es la raiz de nuestro árbol
+                if (raiz == Raiz_P)//verifica si la hoja es la raiz de nuestro árbol
                 {
-                    for (int i = 0; i < Raiz_P.Cant_valores; i++)
-                    {
-                        if (Raiz_P.Listahoja.ObtenerValor(i).CompareTo(valor) == 0)
-                        {
-
-                            Raiz_P.Listahoja.ExtraerEnPosicion(i);
-                            Raiz_P.Cant_valores--;
-                            return Raiz_P;
-                        }
-                    }
+                    Raiz_P = EliminarEnSecuencia(Raiz_P, valor);//si si es elimina en la lista
                 }
 
 
-                else //busca en las hojas
+                else //Hoja 
                 {
 
                     for (int i = 0; i < Raiz_P.Cant_valores; i++) //busca en la hoja el valor
@@ -353,17 +349,65 @@ namespace ArbolB
                             }
 
 
-                            else //Sino cumple con la cantidad mínima
+                            else //Sino cumple con la cantidad mínima  
                             {
+                                //Primero verificamos si nos pueden prestar
+
+
                                 int padre_R = PosicionPadre(Raiz_P.padre, valor);
-                                if (padre_R == 0 && Raiz_P.padre.hijo[padre_R + 1].Cant_valores > (grado - 1) / 2)
+
+                                if (padre_R > 0 && padre_R <= (Raiz_P.padre.Cant_valores - 1))
                                 {
-                                    Raiz_P.Listahoja.ObtenerValor(i, Raiz_P.padre.Listahoja.ObtenerValor(padre_R));
-                                    Raiz_P.padre.Listahoja.ObtenerValor(padre_R, Raiz_P.padre.hijo[padre_R + 1].Listahoja.ObtenerValor(0));
-                                    Raiz_P.padre.hijo[padre_R + 1].Listahoja.ExtraerEnPosicion(0);
+                                    if (Raiz_P.padre.hijo[padre_R - 1].Cant_valores > (grado - 1) / 2)
+                                    {
+                                        Raiz_P = PrestamoMedio(padre_R, Raiz_P, i, valor, "izquierdo");
+                                        return Raiz_P;
+                                    }
+                                    else
+                                    {
+                                        if (Raiz_P.padre.hijo[padre_R + 1].Cant_valores > (grado - 1) / 2)
+                                        {
+                                            Raiz_P = PrestamoMedio(padre_R, Raiz_P, i, valor, "derecho");
+                                            return Raiz_P;
+                                        }
+                                    }
                                 }
 
-                                Raiz_P.Listahoja.ObtenerValor(0, valor);
+                                //caso en que el nodo este en la orilla izquierda
+                                if (padre_R == 0 && Raiz_P.padre.hijo[padre_R + 1].Cant_valores > (grado - 1) / 2)//Verifica si el valor es el primero
+                                {
+                                    Raiz_P = PrestamoInicio(padre_R, Raiz_P, i, valor);
+                                    return Raiz_P;
+                                }
+                                else
+                                {
+                                    if (padre_R == 0 && Raiz_P.padre.hijo[padre_R + 1].Cant_valores <= (grado - 1) / 2)//Verifica si el valor es el primero
+                                    {
+                                        Raiz_P = UnionOrillaiz(padre_R, Raiz_P, i, valor);
+                                        return Raiz_P;
+                                    }
+                                }
+
+
+
+                                //caso en el que el nodo este en la orilla derecha
+                                if (padre_R == (Raiz_P.padre.Cant_valores) && Raiz_P.padre.hijo[padre_R - 1].Cant_valores > (grado - 1) / 2) //Verifica si el valor es el ultimo de la lista
+                                {
+                                    Raiz_P = PrestamoFinal(padre_R - 1, Raiz_P, i, valor);
+                                    return Raiz_P;
+                                }
+                                else
+                                {
+                                    if (padre_R == (Raiz_P.padre.Cant_valores) && Raiz_P.padre.hijo[padre_R - 1].Cant_valores <= (grado - 1) / 2)//Verifica si el valor es el primero
+                                    {
+                                        Raiz_P = UnionOrillader(padre_R, Raiz_P, i, valor);
+                                        return Raiz_P;
+                                    }
+                                }
+
+
+
+                                //Raiz_P.Listahoja.ObtenerValor(0, valor);
 
                             }
 
@@ -426,7 +470,7 @@ namespace ArbolB
             return Raiz_P;
         }
 
-
+        //metodos utilizados para distintos procesos
         int PosicionPadre(NodoArbol<L> Padre, L valor) //Busca en la lista padre que nodo es el padre
         {
             for (int i = 0; i < Padre.Cant_valores; i++)
@@ -436,7 +480,142 @@ namespace ArbolB
                     return i;
                 }
             }
-            return Padre.Cant_valores - 1; ;
+            return Padre.Cant_valores;
+        }
+
+        private NodoArbol<L> EliminarEnSecuencia(NodoArbol<L> Raiz_P, L valor)
+        {
+            for (int i = 0; i < Raiz_P.Cant_valores; i++)
+            {
+                if (Raiz_P.Listahoja.ObtenerValor(i).CompareTo(valor) == 0)
+                {
+
+                    Raiz_P.Listahoja.ExtraerEnPosicion(i);
+                    Raiz_P.Cant_valores--;
+                    return Raiz_P;
+                }
+            }
+            return Raiz_P;
+        }
+
+
+
+        private NodoArbol<L> PrestamoInicio(int padre_R, NodoArbol<L> Raiz_P, int i, L valor)
+        {
+
+            EliminarEnSecuencia(Raiz_P, valor);//Elimina el dato
+            L Temporal_P = Raiz_P.padre.Listahoja.ObtenerValor(padre_R);
+            Raiz_P.padre.Listahoja.ObtenerValor(padre_R, Raiz_P.padre.hijo[padre_R + 1].Listahoja.ObtenerValor(0)); //Hace el cambio de raíz          
+            Raiz_P.padre.hijo[padre_R + 1].Listahoja.ExtraerEnPosicion(0); //Elimina el dato prestado del hijo anterior
+            Raiz_P.padre.hijo[padre_R + 1].Cant_valores--; //como se toma un valor del hermano se debe restar  
+            Insertar(Temporal_P);//inserta el prestamo
+            return Raiz_P;
+
+        }
+
+
+        private NodoArbol<L> PrestamoFinal(int padre_R, NodoArbol<L> Raiz_P, int i, L valor)
+        {
+            EliminarEnSecuencia(Raiz_P, valor);//Elimina el dato
+            L Temporal_P = Raiz_P.padre.Listahoja.ObtenerValor(padre_R);
+            L insertar_Cambio = Raiz_P.padre.hijo[padre_R].Listahoja.ObtenerValor(Raiz_P.padre.hijo[padre_R].Cant_valores - 1);
+            Raiz_P.padre.Listahoja.ObtenerValor(padre_R, insertar_Cambio); //Hace el cambio de raíz          
+            Raiz_P.padre.hijo[padre_R].Listahoja.ExtraerEnPosicion(Raiz_P.padre.hijo[padre_R].Cant_valores); //Elimina el dato prestado del hijo anterior
+            Raiz_P.padre.hijo[padre_R].Cant_valores--; //como se toma un valor del hermano se debe restar                     
+            Insertar(Temporal_P);//inserta el prestamo
+            return Raiz_P;
+        }
+
+        private NodoArbol<L> PrestamoMedio(int padre_R, NodoArbol<L> Raiz_P, int i, L valor, string hermano) //Hermano der. 0 y hermano iz 1
+        {
+            if (hermano == "izquierdo")
+            {
+                padre_R--;
+                EliminarEnSecuencia(Raiz_P, valor);//Elimina el dato
+                L Temporal_P = Raiz_P.padre.Listahoja.ObtenerValor(padre_R);
+                Raiz_P.padre.Listahoja.ObtenerValor(padre_R, Raiz_P.padre.hijo[padre_R].Listahoja.ObtenerValor(Raiz_P.padre.hijo[padre_R].Cant_valores - 1)); //Hace el cambio de raíz          
+                Raiz_P.padre.hijo[padre_R].Listahoja.ExtraerEnPosicion(Raiz_P.padre.hijo[padre_R].Cant_valores - 1); //Elimina el dato prestado del hijo anterior
+                Raiz_P.padre.hijo[padre_R].Cant_valores--; //como se toma un valor del hermano se debe restar  
+                Insertar(Temporal_P);//inserta el prestamo
+                return Raiz_P;
+            }
+            else
+            {
+                EliminarEnSecuencia(Raiz_P, valor);//Elimina el dato
+                L Temporal_P = Raiz_P.padre.Listahoja.ObtenerValor(padre_R);
+                Raiz_P.padre.Listahoja.ObtenerValor(padre_R, Raiz_P.padre.hijo[padre_R + 1].Listahoja.ObtenerValor(0)); //Hace el cambio de raíz          
+                Raiz_P.padre.hijo[padre_R + 1].Listahoja.ExtraerEnPosicion(0); //Elimina el dato prestado del hijo anterior
+                Raiz_P.padre.hijo[padre_R + 1].Cant_valores--; //como se toma un valor del hermano se debe restar  
+                Insertar(Temporal_P);//inserta el prestamo
+                return Raiz_P;
+            }
+
+            return Raiz_P;
+        }
+
+
+        private NodoArbol<L> UnionOrillaiz(int padre_R, NodoArbol<L> Raiz_P, int i, L valor)
+        {
+            EliminarEnSecuencia(Raiz_P, valor);//Elimina el dato
+
+            Raiz_P.padre.hijo[padre_R + 1].Listahoja.InsertarInicio(Raiz_P.padre.Listahoja.ObtenerValor(0));
+
+            for (int j = 0; j < Raiz_P.Cant_valores; j++)
+            {
+                Raiz_P.padre.hijo[padre_R + 1].Listahoja.InsertarInicio(Raiz_P.Listahoja.ObtenerValor((Raiz_P.Cant_valores - 1) - j));
+                Raiz_P.padre.hijo[padre_R + 1].Cant_valores++;
+                Raiz_P.Listahoja.ExtraerFinal();
+
+            }
+            EliminarEnSecuencia(Raiz_P.padre, Raiz_P.padre.Listahoja.ObtenerValor(0));//Elimina el padre
+            Raiz_P.padre.hijo[padre_R + 1].Cant_valores = Raiz_P.padre.hijo[padre_R + 1].Listahoja.contador;
+            //Raiz_P.padre.Cant_valores--;
+
+            Raiz_P = Raiz_P.padre.hijo[padre_R + 1];
+
+            int cont = 0;
+            for (int j = 0; j < (Raiz_P.padre.Cant_valores + 1); j++)
+            {
+                Raiz_P.padre.hijo[j] = Raiz_P.padre.hijo[j + 1];
+                cont++;
+            }
+
+            Raiz_P.padre.hijo[cont] = null;
+
+            return Raiz_P;
+        }
+
+
+        private NodoArbol<L> UnionOrillader(int padre_R, NodoArbol<L> Raiz_P, int i, L valor)
+        {
+            EliminarEnSecuencia(Raiz_P, valor);//Elimina el dato
+
+            //seguir
+            
+            Raiz_P.padre.hijo[padre_R-1].Listahoja.InsertarFinal(Raiz_P.padre.Listahoja.ObtenerValor(Raiz_P.padre.Cant_valores-1));
+
+            for (int j = 0; j < Raiz_P.Cant_valores; j++)
+            {
+                Raiz_P.padre.hijo[padre_R - 1].Listahoja.InsertarFinal(Raiz_P.Listahoja.ObtenerValor(0));
+                Raiz_P.padre.hijo[padre_R - 1].Cant_valores++;
+                Raiz_P.Listahoja.ExtraerInicio();
+
+            }
+
+            EliminarEnSecuencia(Raiz_P.padre, Raiz_P.padre.Listahoja.ObtenerValor(Raiz_P.padre.Cant_valores - 1));//Elimina el padre
+            Raiz_P.padre.hijo[padre_R - 1].Cant_valores = Raiz_P.padre.hijo[padre_R - 1].Listahoja.contador;
+            
+
+            Raiz_P = Raiz_P.padre.hijo[padre_R - 1];
+           
+            Raiz_P.padre.hijo[Raiz_P.padre.Cant_valores+1] = null;
+        
+            if(Raiz_P.padre.Cant_valores==0)
+            {
+                raiz = Raiz_P;
+            }
+            
+            return Raiz_P;
         }
     }
 }
