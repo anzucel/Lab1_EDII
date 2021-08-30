@@ -309,21 +309,26 @@ namespace ArbolB
                 }
             }
         }
-        //eliminar
+        //Empieza la parte de eliminación
 
 
         public void eliminar(L Valor)
         {
             NodoArbol<L> vervalor = raiz;
-            EliminarNodo(Valor, raiz);
+            NodoArbol<L> NODO_A = EliminarNodo(Valor, raiz);
 
+            if(NODO_A.padre!= null)
+            {
+                Verificacion_CantMin(NODO_A.padre);
+            }            
 
             return;
         }
 
+
         private NodoArbol<L> EliminarNodo(L valor, NodoArbol<L> Raiz_P)
         {
-
+           
             //Paso 1 verificar si estamos en una hoja
             if (Raiz_P.hoja)
             {
@@ -334,7 +339,7 @@ namespace ArbolB
                 }
 
 
-                else //Hoja 
+                else //en este caso solo es una hoja 
                 {
 
                     for (int i = 0; i < Raiz_P.Cant_valores; i++) //busca en la hoja el valor
@@ -353,10 +358,12 @@ namespace ArbolB
                             {
                                 //Primero verificamos si nos pueden prestar
 
+                                int padre_R = PosicionPadre(Raiz_P.padre, valor); //obtenemos en que posición se encuentra el padre
 
-                                int padre_R = PosicionPadre(Raiz_P.padre, valor);
 
-                                if (padre_R > 0 && padre_R <= (Raiz_P.padre.Cant_valores - 1))
+                                //Verificación en que lado del nivel está el nodo
+
+                                if (padre_R > 0 && padre_R <= (Raiz_P.padre.Cant_valores - 1))//Esta en el medio 
                                 {
                                     if (Raiz_P.padre.hijo[padre_R - 1].Cant_valores > (grado - 1) / 2)
                                     {
@@ -370,10 +377,20 @@ namespace ArbolB
                                             Raiz_P = PrestamoMedio(padre_R, Raiz_P, i, valor, "derecho");
                                             return Raiz_P;
                                         }
+                                        else
+                                        {
+                                            if(Raiz_P.padre.hijo[padre_R - 1].Cant_valores <= (grado - 1) / 2 && Raiz_P.padre.hijo[padre_R + 1].Cant_valores <= (grado - 1) / 2)
+                                            {
+                                                Raiz_P= UnionMedio(padre_R, Raiz_P, i, valor);// si ninguno nos puede prestar hacemos unión
+                                                return Raiz_P;
+
+                                            }
+                                        }
                                     }
                                 }
+                                
 
-                                //caso en que el nodo este en la orilla izquierda
+                                //esta en la orilla izquierda
                                 if (padre_R == 0 && Raiz_P.padre.hijo[padre_R + 1].Cant_valores > (grado - 1) / 2)//Verifica si el valor es el primero
                                 {
                                     Raiz_P = PrestamoInicio(padre_R, Raiz_P, i, valor);
@@ -390,7 +407,7 @@ namespace ArbolB
 
 
 
-                                //caso en el que el nodo este en la orilla derecha
+                                //esta en la orilla derecha
                                 if (padre_R == (Raiz_P.padre.Cant_valores) && Raiz_P.padre.hijo[padre_R - 1].Cant_valores > (grado - 1) / 2) //Verifica si el valor es el ultimo de la lista
                                 {
                                     Raiz_P = PrestamoFinal(padre_R - 1, Raiz_P, i, valor);
@@ -404,15 +421,7 @@ namespace ArbolB
                                         return Raiz_P;
                                     }
                                 }
-
-
-
-                                //Raiz_P.Listahoja.ObtenerValor(0, valor);
-
-                            }
-
-                            //Raiz_P.Listahoja.ExtraerEnPosicion(i);
-                            //Raiz_P.Cant_valores--;
+                            }            
                         }
 
                     }
@@ -420,58 +429,119 @@ namespace ArbolB
 
 
             }
+
             else //eliminacion de padres
             {
                 bool encontrado = false;
                 bool mayor = true;
-                if (Raiz_P.hoja == false) //Verifica si aun sigue buscando entre los padres
+                if (Raiz_P.hoja == false) //Verifica si no es hoja
                 {
                     for (int i = 0; i < Raiz_P.Cant_valores; i++)//Busca si existe en la listahoja
                     {
                         if (Raiz_P.Listahoja.ObtenerValor(i).CompareTo(valor) == 0)
                         {
-                            //Eliminar padre
+
+                            
+                            if(Raiz_P.hijo[i].Cant_valores > (grado-1)/2)//Caso en el que hermano izquierdo va a prestar
+                            {
+                               
+                                L temporal = Raiz_P.hijo[i].Listahoja.ObtenerValor(Raiz_P.hijo[i].Cant_valores-1);
+                                Raiz_P.Listahoja.ObtenerValor(i, temporal);
+                                Raiz_P.hijo[i].Listahoja.ExtraerFinal();
+                                Raiz_P.hijo[i].Cant_valores = Raiz_P.hijo[i].Listahoja.contador;
+                                
+                            }
+                            else
+                            {
+                                if(Raiz_P.hijo[i+1].Cant_valores >(grado-1)/2) //Caso en el que hermano derecho va a prestar
+                                {
+                                    L temporal = Raiz_P.hijo[i+1].Listahoja.ObtenerValor(0);
+                                    Raiz_P.Listahoja.ObtenerValor(i, temporal);
+                                    Raiz_P.hijo[i+1].Listahoja.ExtraerInicio();
+                                    Raiz_P.hijo[i+1].Cant_valores = Raiz_P.hijo[i+1].Listahoja.contador;
+                                    
+                                }
+                                else//caso que no este en la orilla
+                                {
+                                    L Temporal = Raiz_P.hijo[i].Listahoja.ObtenerValor(Raiz_P.hijo[i].Cant_valores-1); //extrae el ultimo valor de la lista
+                                    Raiz_P.Listahoja.ObtenerValor(i, Temporal);
+
+                                    Raiz_P = Raiz_P.hijo[i];
+                                    valor = Temporal;
+
+                                    if(i== 0)
+                                    {
+                                        Raiz_P =  UnionOrillaiz(i, Raiz_P, i, valor);
+                                        return Raiz_P;
+                                    }
+                                    else
+                                    {
+                                        Raiz_P =  UnionMedio(i, Raiz_P,i, valor);
+                                        return Raiz_P;
+                                    }                                 
+                                }
+                            }
                             encontrado = true;
                             return Raiz_P;
                         }
 
                     }
 
-                    if (encontrado != true)
+                    if (encontrado != true) // Define el camino a tomar si aún no se ha encontrado
                     {
-                        for (int i = 0; i < Raiz_P.Cant_valores; i++)//busca cual es menor para seguir el recorrido de busqueda
+                        for (int i = 0; i < Raiz_P.Cant_valores; i++)
                         {
                             if (Raiz_P.Listahoja.ObtenerValor(i).CompareTo(valor) > 0)
                             {
                                 Raiz_P = Raiz_P.hijo[i];
                                 mayor = false;
-                                EliminarNodo(valor, Raiz_P);
+                                Raiz_P = EliminarNodo(valor, Raiz_P);
 
                                 return Raiz_P;
-                                //Eliminar padre
                             }
 
                         }
-                        if (mayor = true)
+                        if (mayor = true)// si en el caso es el ultimo nodo 
                         {
                             Raiz_P = Raiz_P.hijo[Raiz_P.Cant_valores];
-                            EliminarNodo(valor, Raiz_P);
+                            Raiz_P = EliminarNodo(valor, Raiz_P);
                         }
                     }
-
-
                 }
-                else
-                {
-                }
+                //else
+                //{
+                //}
+            }
+         
+            return Raiz_P;
+        }
 
+
+
+
+
+
+
+        //metodos utilizados para distintos procesos como uniones prestamos, busquedas de padres y más...
+
+       private NodoArbol<L> Verificacion_CantMin(NodoArbol<L> Raiz_P)
+        {
+            if(Raiz_P.Cant_valores > (grado-1)/2)
+            {
+                return Raiz_P;
+            }
+            else
+            {
+               // UnionMedio()
+                //equilibrar
             }
 
             return Raiz_P;
         }
 
-        //metodos utilizados para distintos procesos
-        int PosicionPadre(NodoArbol<L> Padre, L valor) //Busca en la lista padre que nodo es el padre
+
+
+        int PosicionPadre(NodoArbol<L> Padre, L valor) //Busca en la lista padre la posición del padre de un nodo
         {
             for (int i = 0; i < Padre.Cant_valores; i++)
             {
@@ -483,7 +553,9 @@ namespace ArbolB
             return Padre.Cant_valores;
         }
 
-        private NodoArbol<L> EliminarEnSecuencia(NodoArbol<L> Raiz_P, L valor)
+
+
+        private NodoArbol<L> EliminarEnSecuencia(NodoArbol<L> Raiz_P, L valor) //Elimina un valor en hojalista
         {
             for (int i = 0; i < Raiz_P.Cant_valores; i++)
             {
@@ -500,7 +572,7 @@ namespace ArbolB
 
 
 
-        private NodoArbol<L> PrestamoInicio(int padre_R, NodoArbol<L> Raiz_P, int i, L valor)
+        private NodoArbol<L> PrestamoInicio(int padre_R, NodoArbol<L> Raiz_P, int i, L valor)//Presta un nodo al estar desequilibrado en la esquina izquierda
         {
 
             EliminarEnSecuencia(Raiz_P, valor);//Elimina el dato
@@ -514,7 +586,7 @@ namespace ArbolB
         }
 
 
-        private NodoArbol<L> PrestamoFinal(int padre_R, NodoArbol<L> Raiz_P, int i, L valor)
+        private NodoArbol<L> PrestamoFinal(int padre_R, NodoArbol<L> Raiz_P, int i, L valor)//Presta un nodo al estar desequilibrado en la esquina derecha
         {
             EliminarEnSecuencia(Raiz_P, valor);//Elimina el dato
             L Temporal_P = Raiz_P.padre.Listahoja.ObtenerValor(padre_R);
@@ -526,7 +598,7 @@ namespace ArbolB
             return Raiz_P;
         }
 
-        private NodoArbol<L> PrestamoMedio(int padre_R, NodoArbol<L> Raiz_P, int i, L valor, string hermano) //Hermano der. 0 y hermano iz 1
+        private NodoArbol<L> PrestamoMedio(int padre_R, NodoArbol<L> Raiz_P, int i, L valor, string hermano) //Presta un nodo al estar desequilibrado dentro del arbol, no en ninguna esquina
         {
             if (hermano == "izquierdo")
             {
@@ -554,7 +626,7 @@ namespace ArbolB
         }
 
 
-        private NodoArbol<L> UnionOrillaiz(int padre_R, NodoArbol<L> Raiz_P, int i, L valor)
+        private NodoArbol<L> UnionOrillaiz(int padre_R, NodoArbol<L> Raiz_P, int i, L valor)//Unión de nodos en la orilla izquierda de nuestro árbol
         {
             EliminarEnSecuencia(Raiz_P, valor);//Elimina el dato
 
@@ -586,11 +658,12 @@ namespace ArbolB
         }
 
 
-        private NodoArbol<L> UnionOrillader(int padre_R, NodoArbol<L> Raiz_P, int i, L valor)
+
+        private NodoArbol<L> UnionOrillader(int padre_R, NodoArbol<L> Raiz_P, int i, L valor) //Union de nodos en la orilla derecha
         {
             EliminarEnSecuencia(Raiz_P, valor);//Elimina el dato
 
-            //seguir
+            
             
             Raiz_P.padre.hijo[padre_R-1].Listahoja.InsertarFinal(Raiz_P.padre.Listahoja.ObtenerValor(Raiz_P.padre.Cant_valores-1));
 
@@ -617,6 +690,48 @@ namespace ArbolB
             
             return Raiz_P;
         }
+
+
+
+
+        private NodoArbol<L> UnionMedio(int padre_R, NodoArbol<L> Raiz_P, int i, L valor)//Unión de nodos en el medio del árbol
+        {
+            EliminarEnSecuencia(Raiz_P, valor);//Elimina el dato
+           
+
+            Raiz_P.padre.hijo[padre_R - 1].Listahoja.InsertarFinal(Raiz_P.padre.Listahoja.ObtenerValor(padre_R-1));
+
+            for (int j = 0; j < Raiz_P.Cant_valores; j++)
+            {
+                Raiz_P.padre.hijo[padre_R - 1].Listahoja.InsertarFinal(Raiz_P.Listahoja.ObtenerValor(0));
+                Raiz_P.padre.hijo[padre_R - 1].Cant_valores++;
+                Raiz_P.Listahoja.ExtraerInicio();
+
+            }
+
+            EliminarEnSecuencia(Raiz_P.padre, Raiz_P.padre.Listahoja.ObtenerValor(padre_R - 1));//Elimina el padre
+            Raiz_P.padre.hijo[padre_R - 1].Cant_valores = Raiz_P.padre.hijo[padre_R - 1].Listahoja.contador;
+
+
+            Raiz_P = Raiz_P.padre.hijo[padre_R - 1];
+            int cont = padre_R;
+            for (int j = padre_R; j < (Raiz_P.padre.Cant_valores + 1); j++)
+            {
+                Raiz_P.padre.hijo[j] = Raiz_P.padre.hijo[j + 1];
+                cont++;
+            }
+
+            Raiz_P.padre.hijo[cont] = null;
+
+            Raiz_P.padre.hijo[Raiz_P.padre.Cant_valores + 1] = null;
+
+            if (Raiz_P.padre.Cant_valores == 0)
+            {
+                raiz = Raiz_P;
+            }
+            return Raiz_P;
+        }
+            
     }
 }
 

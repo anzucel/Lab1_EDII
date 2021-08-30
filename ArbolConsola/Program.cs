@@ -6,7 +6,7 @@ namespace ArbolConsola
     {
         static void Main(string[] args)
         {
-            ArbolB.ArbolB<int> arbol = new ArbolB.ArbolB<int>(3);
+            ArbolB.ArbolB<int> arbol = new ArbolB.ArbolB<int>(5);
 
             arbol.Insertar(18);
             arbol.Insertar(19);
@@ -14,66 +14,50 @@ namespace ArbolConsola
             arbol.Insertar(24);
             arbol.Insertar(40);
             arbol.Insertar(42);
-            //arbol.Insertar(44);
-            //arbol.Insertar(45);
+            arbol.Insertar(44);
+            arbol.Insertar(45);
+            arbol.Insertar(80);
+            arbol.Insertar(92);
+            arbol.Insertar(99);
+            arbol.Insertar(11);
+            arbol.Insertar(8);
+            arbol.Insertar(2);
+            arbol.Insertar(27);
+            arbol.Insertar(30);
+            arbol.Insertar(31);
+            arbol.Insertar(15);
+            arbol.Insertar(5);
+            arbol.Insertar(21);
+            arbol.Insertar(22);
+            arbol.Insertar(28);
             //arbol.Insertar(50);
 
-            //arbol.eliminar(44);
-            arbol.eliminar(18);
-            //arbol.eliminar(45);
-            arbol.eliminar(40);
             //arbol.eliminar(24);
-            arbol.eliminar(42);
-            arbol.eliminar(24);
+            //arbol.eliminar(44);
+            //arbol.eliminar(92);
             //arbol.eliminar(20);
+            //arbol.eliminar(18);
+            ////arbol.eliminar(40);
+            //arbol.eliminar(99);
+            arbol.eliminar(8);
 
+            arbol.eliminar(11);
+        arbol.eliminar(20);
 
-            // arbol.Insertar(12);
-            // arbol.Insertar(12);
-            // arbol.Insertar(63);
-            // arbol.Insertar(40);
-            // arbol.Insertar(73);
-            // arbol.Insertar(78);
-            // arbol.Insertar(59);
-            // arbol.Insertar(57);
-            // arbol.Insertar(57);
-            // arbol.Insertar(29);
-            // arbol.Insertar(51);
-            // arbol.Insertar(71);
-            // arbol.Insertar(98);
-            // arbol.Insertar(19);
-            // arbol.Insertar(44);
-            // arbol.Insertar(24);
-            // arbol.Insertar(72);
-            // arbol.Insertar(80);
-            // arbol.Insertar(41);
-            // arbol.Insertar(25);
-            // arbol.Insertar(42);
-            // arbol.Insertar(26);
-            // arbol.Insertar(70);
-            // arbol.Insertar(69);
+            arbol.eliminar(18);
+            arbol.eliminar(19);
+            arbol.eliminar(99);
 
-            // arbol.eliminar(98);
-            // arbol.eliminar(78);
-            //arbol.eliminar(80);
-            //arbol.eliminar(41);
-            //arbol.eliminar(29);
+            //arbol.Insertar(100);
+            //arbol.Insertar(101);
+            //arbol.Insertar(102);
 
-
-            //arbol.Insertar(20);
-            //arbol.Insertar(43);
-            //arbol.Insertar(68);
-            //arbol.Insertar(64);
-            //arbol.Insertar(45);
-
-            //arbol.eliminar(25);
-            //arbol.eliminar(26);
-            //arbol.eliminar(69);
-            //arbol.eliminar(73);
-
-            //arbol.Insertar(88);
-
-            //arbol.eliminar(64);
+            //    arbol.eliminar(100);
+            //arbol.eliminar(99);
+            //arbol.eliminar(102);
+            //arbol.eliminar(18);
+            //arbol.eliminar(19);
+            ////arbol.eliminar(24);
 
 
             /*int opcion, grado, cant_datos;
