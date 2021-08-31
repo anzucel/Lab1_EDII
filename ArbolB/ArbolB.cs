@@ -217,19 +217,51 @@ namespace ArbolB
 
                             for (int i = 0; i < (grado / 2) + 1; i++)
                             {
+                                temporal.padre.hijo[posicion].hijo[i] = new NodoArbol<L>(temporal.padre.hijo[posicion]);
                                 for (int j = 0; j < pivote.hijo[i].Cant_valores; j++)
                                 {
-                                    temporal.padre.hijo[posicion].hijo[i] = new NodoArbol<L>(temporal.padre.hijo[posicion]);
                                     temporal.padre.hijo[posicion].hijo[i].InsertarValor(pivote.hijo[i].Listahoja.ExtraerEnPosicion(j).Valor);
+
+                                    if (pivote.hijo[i].hijo[j] != null)
+                                    {
+                                        if (!pivote.hijo[i].hoja)
+                                        {
+                                            for (int k = 0; k < grado; k++)
+                                            {
+                                                temporal.padre.hijo[posicion].hijo[i].hijo[k] = pivote.hijo[i].hijo[k];
+                                                if (pivote.hijo[i].hijo[k] != null)
+                                                {
+                                                    temporal.padre.hijo[posicion].hijo[i].hoja = false;
+                                                    pivote.hijo[i].hijo[k].padre = temporal.padre.hijo[posicion].hijo[i];
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
                             for (int i = (grado / 2) + 1, k = 0; i < grado + 1; i++, k++)
                             {
+                                temporal.padre.hijo[posicion + 1].hijo[k] = new NodoArbol<L>(temporal.padre.hijo[posicion + 1]);
                                 for (int j = 0; j < pivote.hijo[i].Cant_valores; j++)
                                 {
-                                    temporal.padre.hijo[posicion + 1].hijo[k] = new NodoArbol<L>(temporal.padre.hijo[posicion + 1]);
                                     temporal.padre.hijo[posicion + 1].hijo[k].InsertarValor(pivote.hijo[i].Listahoja.ExtraerEnPosicion(j).Valor);
+
+                                    if (pivote.hijo[i].hijo[j] != null)//
+                                    {
+                                        if (!pivote.hijo[i].hoja)
+                                        {
+                                            for (int l = 0; l < grado; l++)//
+                                            {
+                                                temporal.padre.hijo[posicion + 1].hijo[k].hijo[l] = pivote.hijo[i].hijo[l];
+                                                if (pivote.hijo[i].hijo[l] != null)
+                                                {
+                                                    temporal.padre.hijo[posicion + 1].hijo[k].hoja = false;
+                                                    pivote.hijo[i].hijo[l].padre = temporal.padre.hijo[posicion + 1].hijo[k];
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
