@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace ProyectoAPI
 {
@@ -35,6 +36,10 @@ namespace ProyectoAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts(); 
+            }
 
             app.UseHttpsRedirection();
 
@@ -42,9 +47,17 @@ namespace ProyectoAPI
 
             app.UseAuthorization();
 
+            app.UseStaticFiles();
+
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.Run(async (contex) =>
+            {
+                await contex.Response.WriteAsync("Error, no se pudo encontrar archivo"); //maneja todas las solicitudes 
             });
         }
     }

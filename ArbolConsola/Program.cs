@@ -6,8 +6,7 @@ namespace ArbolConsola
     {
         static void Main(string[] args)
         {
-            ArbolB.ArbolB<int> arbol = new ArbolB.ArbolB<int>(5);
-            
+            ArbolB.ArbolB<int> arbol = new ArbolB.ArbolB<int>(3);
 
             arbol.Insertar(18);
             arbol.Insertar(19);
@@ -16,7 +15,8 @@ namespace ArbolConsola
             arbol.Insertar(40);
             arbol.Insertar(42);
             arbol.Insertar(44);
-            arbol.Insertar(45);
+            arbol.Insertar(44);
+            /*arbol.Insertar(45);
             arbol.Insertar(80);
             arbol.Insertar(92);
             arbol.Insertar(99);
@@ -50,52 +50,23 @@ namespace ArbolConsola
             arbol.Insertar(29);
             arbol.Insertar(32);
             arbol.Insertar(33);
-            arbol.Insertar(34);
+            arbol.Insertar(34);*/
             //arbol.Imprimir();
 
-
-
-            //arbol.eliminar(24);
             //arbol.eliminar(44);
             //arbol.eliminar(92);
             //arbol.eliminar(20);
             //arbol.eliminar(18);
-            ////arbol.eliminar(40);
+            //arbol.eliminar(40);
             //arbol.eliminar(99);
             //arbol.eliminar(8);
 
             //arbol.eliminar(11);
-            //arbol.eliminar(20);
 
             //arbol.eliminar(18);
             //arbol.eliminar(19);
             //arbol.eliminar(99);
-            arbol.eliminar(18);
-            arbol.eliminar(19);
-            arbol.eliminar(42);
-            arbol.eliminar(23);
-            arbol.eliminar(22);
-            arbol.eliminar(9);
-            arbol.eliminar(10);
-            //arbol.eliminar(8);
-            //arbol.eliminar(7);
-            //arbol.eliminar(1);
-            //arbol.eliminar(2);
-            arbol.eliminar(15);
-            arbol.eliminar(24);
-            arbol.eliminar(44);
-            arbol.eliminar(14);
-            arbol.eliminar(27);
-            //arbol.eliminar(3);
-            //arbol.eliminar(33);
 
-          
-
-            arbol.Imprimir();
-
-            //arbol.Insertar(100);
-            //arbol.Insertar(101);
-            //arbol.Insertar(102);
 
             //    arbol.eliminar(100);
             //arbol.eliminar(99);
@@ -104,6 +75,7 @@ namespace ArbolConsola
             //arbol.eliminar(19);
             ////arbol.eliminar(24);
 
+            arbol.Imprimir();
 
             /*int opcion, grado, cant_datos;
 
