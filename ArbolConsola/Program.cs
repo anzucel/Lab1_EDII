@@ -46,7 +46,7 @@ namespace ArbolConsola
 
             arbol.eliminar(18);
             arbol.eliminar(19);
-            arbol.eliminar(99);
+            arbol.eliminar(42);
 
             //arbol.Insertar(100);
             //arbol.Insertar(101);

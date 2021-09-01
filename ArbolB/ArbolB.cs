@@ -317,11 +317,15 @@ namespace ArbolB
             NodoArbol<L> vervalor = raiz;
             NodoArbol<L> NODO_A = EliminarNodo(Valor, raiz);
 
-            if(NODO_A.padre!= null)
-            {
-                Verificacion_CantMin(NODO_A.padre);
-            }            
 
+            while(NODO_A.padre !=null)
+            {
+                if (NODO_A.padre != null)
+                {
+                    NODO_A = Verificacion_CantMin(NODO_A.padre);
+                }
+            }
+                  
             return;
         }
 
@@ -526,17 +530,118 @@ namespace ArbolB
 
        private NodoArbol<L> Verificacion_CantMin(NodoArbol<L> Raiz_P)
         {
-            if(Raiz_P.Cant_valores > (grado-1)/2)
+            if (Raiz_P.padre != null)
             {
-                return Raiz_P;
-            }
-            else
-            {
-               // UnionMedio()
-                //equilibrar
+                if (Raiz_P.Cant_valores > (grado - 1) / 2)
+                {
+                    return Raiz_P;
+                }
+                else
+                {
+                    L valor = Raiz_P.Listahoja.ObtenerValor(0);
+                    int padre_R = PosicionPadre(Raiz_P.padre, valor);
+                    Raiz_P=UnionPadres(padre_R, Raiz_P);
+
+                    return Raiz_P;
+                    // UnionMedio()
+                    //equilibrar
+                }
             }
 
             return Raiz_P;
+        }
+
+
+
+        private NodoArbol<L> UnionPadres(int padre_R, NodoArbol<L> Raiz_P)
+        {
+            
+                if (padre_R == 0)
+                {
+
+
+
+                ////inseta el padre en la unión
+
+                L ValorPadre = Raiz_P.padre.Listahoja.ObtenerValor(padre_R);
+                Raiz_P.padre.hijo[padre_R].Listahoja.InsertarFinal(ValorPadre);
+                Raiz_P.padre.hijo[padre_R].Cant_valores++;
+                EliminarEnSecuencia(Raiz_P.padre, ValorPadre);
+
+                ////Inserta los valores del nodo a unir
+                for (int i = 0; i < Raiz_P.Cant_valores; i++)
+                {
+                    L ValorNodo = Raiz_P.Listahoja.ObtenerValor(0);
+                    Raiz_P.padre.hijo[padre_R].Listahoja.InsertarFinal(ValorNodo);
+                    Raiz_P.padre.hijo[padre_R].Cant_valores++;
+
+
+                }
+
+
+                ////Agrega los hijos al nuevo padre unido
+                //NodoArbol<L> Raiz_Nueva = Raiz_P.padre.hijo[padre_R]; // Resultado de la Unión
+                //for (int i = 0; i <= Raiz_P.Cant_valores; i++)
+                //{
+                //    Raiz_Nueva.hijo[(Raiz_Nueva.Cant_valores - 1) + i] = Raiz_P.hijo[i];
+                //}
+
+                //if (Raiz_Nueva.padre.padre == null)
+                //{
+                //    raiz = Raiz_Nueva;
+                //}
+
+                //Raiz_P = Raiz_Nueva;
+                //Raiz_P.padre = Raiz_P.padre.padre;
+            }
+                else
+                {
+                    //inseta el padre en la unión
+                    padre_R--;
+                    L ValorPadre = Raiz_P.padre.Listahoja.ObtenerValor(padre_R);
+                    Raiz_P.padre.hijo[padre_R].Listahoja.InsertarFinal(ValorPadre);
+                    Raiz_P.padre.hijo[padre_R].Cant_valores++;
+                    EliminarEnSecuencia(Raiz_P.padre, ValorPadre);
+
+                    //Inserta los valores del nodo a unir
+                    for (int i = 0; i < Raiz_P.Cant_valores; i++)
+                    {
+                        L ValorNodo = Raiz_P.Listahoja.ObtenerValor(0);
+                        Raiz_P.padre.hijo[padre_R].Listahoja.InsertarFinal(ValorNodo);
+                        Raiz_P.padre.hijo[padre_R].Cant_valores++;
+
+
+                    }
+
+
+                    //Agrega los hijos al nuevo padre unido
+                    NodoArbol<L> Raiz_Nueva = Raiz_P.padre.hijo[padre_R]; // Resultado de la Unión
+                    for (int i = 0; i <= Raiz_P.Cant_valores; i++)
+                    {
+                        Raiz_Nueva.hijo[(Raiz_Nueva.Cant_valores-1) + i] = Raiz_P.hijo[i];
+                    }
+
+                    if (Raiz_Nueva.padre.padre == null)
+                    {
+                        raiz = Raiz_Nueva;
+                    }
+                    
+                Raiz_P = Raiz_Nueva;
+                Raiz_P.padre = Raiz_P.padre.padre;
+                
+            }
+            return Raiz_P;
+        }
+        int PosicionPadreNodo(NodoArbol<L> Padre, L valor) //Busca en la lista padre la posición del padre de un nodo
+        {
+            for (int i = 0; i < Padre.Cant_valores; i++)
+            {
+                if (Padre.Listahoja.ObtenerValor(i).CompareTo(valor) > 0)
+                {
+                    return i;
+                }
+            }
+            return Padre.Cant_valores;
         }
 
 
@@ -550,6 +655,7 @@ namespace ArbolB
                     return i;
                 }
             }
+            
             return Padre.Cant_valores;
         }
 
@@ -657,6 +763,8 @@ namespace ArbolB
             return Raiz_P;
         }
 
+        
+
 
 
         private NodoArbol<L> UnionOrillader(int padre_R, NodoArbol<L> Raiz_P, int i, L valor) //Union de nodos en la orilla derecha
@@ -690,6 +798,9 @@ namespace ArbolB
             
             return Raiz_P;
         }
+
+
+       
 
 
 
