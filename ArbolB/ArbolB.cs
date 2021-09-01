@@ -2,6 +2,7 @@
 using ListaDobleEnlace;
 using System.Collections.Generic;
 
+
 namespace ArbolB
 {
     public class ArbolB<L> where L : IComparable
@@ -217,19 +218,51 @@ namespace ArbolB
 
                             for (int i = 0; i < (grado / 2) + 1; i++)
                             {
+                                temporal.padre.hijo[posicion].hijo[i] = new NodoArbol<L>(temporal.padre.hijo[posicion]);
                                 for (int j = 0; j < pivote.hijo[i].Cant_valores; j++)
                                 {
-                                    temporal.padre.hijo[posicion].hijo[i] = new NodoArbol<L>(temporal.padre.hijo[posicion]);
                                     temporal.padre.hijo[posicion].hijo[i].InsertarValor(pivote.hijo[i].Listahoja.ExtraerEnPosicion(j).Valor);
+
+                                    if (pivote.hijo[i].hijo[j] != null)
+                                    {
+                                        if (!pivote.hijo[i].hoja)
+                                        {
+                                            for (int k = 0; k < grado; k++)
+                                            {
+                                                temporal.padre.hijo[posicion].hijo[i].hijo[k] = pivote.hijo[i].hijo[k];
+                                                if (pivote.hijo[i].hijo[k] != null)
+                                                {
+                                                    temporal.padre.hijo[posicion].hijo[i].hoja = false;
+                                                    pivote.hijo[i].hijo[k].padre = temporal.padre.hijo[posicion].hijo[i];
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
                             for (int i = (grado / 2) + 1, k = 0; i < grado + 1; i++, k++)
                             {
+                                temporal.padre.hijo[posicion + 1].hijo[k] = new NodoArbol<L>(temporal.padre.hijo[posicion + 1]);
                                 for (int j = 0; j < pivote.hijo[i].Cant_valores; j++)
                                 {
-                                    temporal.padre.hijo[posicion + 1].hijo[k] = new NodoArbol<L>(temporal.padre.hijo[posicion + 1]);
                                     temporal.padre.hijo[posicion + 1].hijo[k].InsertarValor(pivote.hijo[i].Listahoja.ExtraerEnPosicion(j).Valor);
+
+                                    if (pivote.hijo[i].hijo[j] != null)//
+                                    {
+                                        if (!pivote.hijo[i].hoja)
+                                        {
+                                            for (int l = 0; l < grado; l++)//
+                                            {
+                                                temporal.padre.hijo[posicion + 1].hijo[k].hijo[l] = pivote.hijo[i].hijo[l];
+                                                if (pivote.hijo[i].hijo[l] != null)
+                                                {
+                                                    temporal.padre.hijo[posicion + 1].hijo[k].hoja = false;
+                                                    pivote.hijo[i].hijo[l].padre = temporal.padre.hijo[posicion + 1].hijo[k];
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
@@ -326,7 +359,7 @@ namespace ArbolB
                 }
             }
                   
-            return;
+             return;
         }
 
 
@@ -480,8 +513,38 @@ namespace ArbolB
                                     }
                                     else
                                     {
-                                        Raiz_P =  UnionMedio(i, Raiz_P,i, valor);
+
+                                        Raiz_P = UnionMedio(i, Raiz_P, i, valor);
                                         return Raiz_P;
+                                        //PosicionPadre(Raiz_P.padre, Temporal);
+                                        //Raiz_P = Raiz_P.padre;
+                                        //if (i !=0 && Raiz_P.hijo[i-1] != null)
+                                        //{
+
+                                        //    if (Raiz_P.hijo[i - 1].Cant_valores > (grado - 1) / 2)
+                                        //    {
+
+
+                                        //        L Reemplazo_P = Raiz_P.Listahoja.ObtenerValor(Raiz_P.Cant_valores - 1);
+                                        //        Raiz_P.Listahoja.ObtenerValor(i, Reemplazo_P);
+
+                                        //        PrestamoFinal(i, Raiz_P, 99999, valor);
+                                        //    }
+                                        //    else
+                                        //    {
+                                        //        Raiz_P = UnionMedio(i, Raiz_P, i, valor);
+                                        //        return Raiz_P;
+                                        //    }
+
+                                        //}
+                                        //else
+                                        //{
+                                        //    Raiz_P = UnionMedio(i, Raiz_P, i, valor);
+                                        //    return Raiz_P;
+
+
+
+
                                     }                                 
                                 }
                             }
@@ -532,7 +595,7 @@ namespace ArbolB
         {
             if (Raiz_P.padre != null)
             {
-                if (Raiz_P.Cant_valores > (grado - 1) / 2)
+                if (Raiz_P.Cant_valores >= (grado - 1) / 2)
                 {
                     return Raiz_P;
                 }
@@ -567,24 +630,32 @@ namespace ArbolB
                 Raiz_P.padre.hijo[padre_R].Listahoja.InsertarFinal(ValorPadre);
                 Raiz_P.padre.hijo[padre_R].Cant_valores++;
                 EliminarEnSecuencia(Raiz_P.padre, ValorPadre);
-
+                int cont2 = 0;
                 ////Inserta los valores del nodo a unir
-                for (int i = 0; i < Raiz_P.Cant_valores; i++)
+                for (int i = 0; i <= Raiz_P.padre.hijo[padre_R+1].Cant_valores; i++)
                 {
-                    L ValorNodo = Raiz_P.Listahoja.ObtenerValor(0);
+                    L ValorNodo = Raiz_P.padre.hijo[padre_R+1].Listahoja.ObtenerValor(0);
+                    EliminarEnSecuencia(Raiz_P.padre.hijo[padre_R + 1], ValorNodo);
                     Raiz_P.padre.hijo[padre_R].Listahoja.InsertarFinal(ValorNodo);
                     Raiz_P.padre.hijo[padre_R].Cant_valores++;
 
-
+                    cont2++;
                 }
 
 
-                ////Agrega los hijos al nuevo padre unido
-                //NodoArbol<L> Raiz_Nueva = Raiz_P.padre.hijo[padre_R]; // Resultado de la Unión
-                //for (int i = 0; i <= Raiz_P.Cant_valores; i++)
-                //{
-                //    Raiz_Nueva.hijo[(Raiz_Nueva.Cant_valores - 1) + i] = Raiz_P.hijo[i];
-                //}
+                //Agrega los hijos al nuevo padre unido
+                NodoArbol<L> Raiz_Nueva = Raiz_P.padre.hijo[padre_R+1]; // Resultado de la Unión
+
+                int cont = 0;
+                while(Raiz_Nueva.hijo[cont] != null)
+                {
+                    
+                    Raiz_P.hijo[(Raiz_P.Cant_valores - cont2) + cont] = Raiz_Nueva.hijo[cont];
+                    cont = cont + 1;
+                }
+
+                Raiz_Nueva.padre = null;
+
 
                 //if (Raiz_Nueva.padre.padre == null)
                 //{
@@ -595,8 +666,10 @@ namespace ArbolB
                 //Raiz_P.padre = Raiz_P.padre.padre;
             }
                 else
-                {
-                    //inseta el padre en la unión
+                  {
+                  
+
+                //inseta el padre en la unión
                     padre_R--;
                     L ValorPadre = Raiz_P.padre.Listahoja.ObtenerValor(padre_R);
                     Raiz_P.padre.hijo[padre_R].Listahoja.InsertarFinal(ValorPadre);
@@ -621,7 +694,14 @@ namespace ArbolB
                         Raiz_Nueva.hijo[(Raiz_Nueva.Cant_valores-1) + i] = Raiz_P.hijo[i];
                     }
 
-                    if (Raiz_Nueva.padre.padre == null)
+               
+                for (int i = 0; i <= Raiz_P.padre.Cant_valores; i++)
+                {
+                    Raiz_P.padre.hijo[padre_R + i] = Raiz_P.padre.hijo[padre_R + (i+1)];
+                }
+
+
+                if (Raiz_Nueva.padre.padre == null && Raiz_Nueva.padre.Cant_valores<1)
                     {
                         raiz = Raiz_Nueva;
                     }
@@ -694,7 +774,11 @@ namespace ArbolB
 
         private NodoArbol<L> PrestamoFinal(int padre_R, NodoArbol<L> Raiz_P, int i, L valor)//Presta un nodo al estar desequilibrado en la esquina derecha
         {
-            EliminarEnSecuencia(Raiz_P, valor);//Elimina el dato
+            if(i!= 99999)
+            {
+                EliminarEnSecuencia(Raiz_P, valor);//Elimina el dato
+            }
+            
             L Temporal_P = Raiz_P.padre.Listahoja.ObtenerValor(padre_R);
             L insertar_Cambio = Raiz_P.padre.hijo[padre_R].Listahoja.ObtenerValor(Raiz_P.padre.hijo[padre_R].Cant_valores - 1);
             Raiz_P.padre.Listahoja.ObtenerValor(padre_R, insertar_Cambio); //Hace el cambio de raíz          
@@ -842,9 +926,12 @@ namespace ArbolB
             }
             return Raiz_P;
         }
-            
+
+
+        
+      }
+
     }
-}
 
 
   
