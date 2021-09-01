@@ -1,16 +1,70 @@
 ﻿using System;
 using ListaDobleEnlace;
 using System.Collections.Generic;
+using ArbolB;
 
 namespace ArbolB
 {
-    public class ArbolB<L> where L : IComparable
+    public class ArbolB<L> //where L : IComparable
     {
+        public bool Mayor(L valor1, L valor2)
+        {
+            var resultado = Comparer<L>.Default.Compare(valor1, valor2);
+            if (resultado >= 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool Iguales(L valor1, L valor2)
+        {
+            var resultado = Comparer<L>.Default.Compare(valor1, valor2);
+            if (resultado == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         private static int grado; //grado del arbol, se enviará dentro del constructor
         private NodoArbol<L> raiz;
-
-        private class NodoArbol<T> where T : IComparable
+        
+        private class NodoArbol<T> //where T : IComparable
         {
+            public bool Mayor(T valor1, T valor2)
+            {
+                var resultado = Comparer<T>.Default.Compare(valor1, valor2);
+                if (resultado >= 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            public bool Iguales(T valor1, T valor2)
+            {
+                var resultado = Comparer<T>.Default.Compare(valor1, valor2);
+                if (resultado == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+
             public bool hoja = true;
             public int Cant_valores = 0; //Registro de la cantidad de valores que tiene cierto nodo, va a incrementar
 
@@ -31,7 +85,7 @@ namespace ArbolB
                 bool insertar = true;
                 for (int i = 0; i <= this.Listahoja.contador; i++)
                 {
-                    if (valor.CompareTo(Listahoja.ObtenerValor(i)) == 0)
+                    if (Iguales(valor, Listahoja.ObtenerValor(i)))//valor.CompareTo(Listahoja.ObtenerValor(i)) == 0)----------------
                     {
                         insertar = false;
                         break;
@@ -57,7 +111,7 @@ namespace ArbolB
                 {
                     for (int j = i + 1; j < Listahoja.contador; j++)
                     {
-                        if (Listahoja.ObtenerValor(i).CompareTo(Listahoja.ObtenerValor(j)) > 0)
+                        if (Mayor(Listahoja.ObtenerValor(i), Listahoja.ObtenerValor(j)))//Listahoja.ObtenerValor(i).CompareTo(Listahoja.ObtenerValor(j)) > 0)
                         {
                             temporal = Listahoja.ExtraerEnPosicion(i).Valor;
                             Listahoja.InsertarEnPosicion(Listahoja.ExtraerEnPosicion(j - 1).Valor, i);
@@ -103,7 +157,7 @@ namespace ArbolB
                 bool posicion_valida = false;
                 for (int i = 0; i < temporal.Cant_valores; i++)
                 {
-                    if (valor.CompareTo(temporal.Listahoja.ObtenerValor(i)) < 0)
+                    if (!Mayor(valor, temporal.Listahoja.ObtenerValor(i)))//valor.CompareTo(temporal.Listahoja.ObtenerValor(i)) < 0)
                     {
                         posicion_valida = true;
                         InsertarNodo(valor, temporal.hijo[i]);
@@ -133,7 +187,7 @@ namespace ArbolB
                     //encuentra la posición desde donde debe separar
                     for (int i = 0; i < temporal.padre.Cant_valores; i++)
                     {
-                        if (temporal.padre.Listahoja.ObtenerValor(i).CompareTo(valor_medio) == 0)
+                        if (Iguales(temporal.padre.Listahoja.ObtenerValor(i), valor_medio))//temporal.padre.Listahoja.ObtenerValor(i).CompareTo(valor_medio) == 0)
                         {
                             posicion = i;
                         }
@@ -376,7 +430,7 @@ namespace ArbolB
 
                     for (int i = 0; i < Raiz_P.Cant_valores; i++) //busca en la hoja el valor
                     {
-                        if (Raiz_P.Listahoja.ObtenerValor(i).CompareTo(valor) == 0)
+                        if (Iguales(Raiz_P.Listahoja.ObtenerValor(i), valor))//Raiz_P.Listahoja.ObtenerValor(i).CompareTo(valor) == 0)
                         {
                             if (Raiz_P.Cant_valores > ((grado - 1) / 2))//Verifica si cumple con la cantidad mínima
                             {
@@ -470,7 +524,7 @@ namespace ArbolB
                 {
                     for (int i = 0; i < Raiz_P.Cant_valores; i++)//Busca si existe en la listahoja
                     {
-                        if (Raiz_P.Listahoja.ObtenerValor(i).CompareTo(valor) == 0)
+                        if (Iguales(Raiz_P.Listahoja.ObtenerValor(i), valor))//Raiz_P.Listahoja.ObtenerValor(i).CompareTo(valor) == 0)
                         {
 
                             
@@ -523,7 +577,7 @@ namespace ArbolB
                     {
                         for (int i = 0; i < Raiz_P.Cant_valores; i++)
                         {
-                            if (Raiz_P.Listahoja.ObtenerValor(i).CompareTo(valor) > 0)
+                            if (Mayor(Raiz_P.Listahoja.ObtenerValor(i), valor))//Raiz_P.Listahoja.ObtenerValor(i).CompareTo(valor) > 0)
                             {
                                 Raiz_P = Raiz_P.hijo[i];
                                 mayor = false;
@@ -577,7 +631,7 @@ namespace ArbolB
         {
             for (int i = 0; i < Padre.Cant_valores; i++)
             {
-                if (Padre.Listahoja.ObtenerValor(i).CompareTo(valor) > 0)
+                if (Mayor(Padre.Listahoja.ObtenerValor(i), valor))//Padre.Listahoja.ObtenerValor(i).CompareTo(valor) > 0)
                 {
                     return i;
                 }
@@ -591,7 +645,7 @@ namespace ArbolB
         {
             for (int i = 0; i < Raiz_P.Cant_valores; i++)
             {
-                if (Raiz_P.Listahoja.ObtenerValor(i).CompareTo(valor) == 0)
+                if (Iguales(Raiz_P.Listahoja.ObtenerValor(i), valor))//Raiz_P.Listahoja.ObtenerValor(i).CompareTo(valor) == 0)
                 {
 
                     Raiz_P.Listahoja.ExtraerEnPosicion(i);
