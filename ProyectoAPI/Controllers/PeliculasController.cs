@@ -98,6 +98,7 @@ namespace ProyectoAPI.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            Singleton.Instance.ABPeliculas.eliminar(id);
         }
     }
 }
