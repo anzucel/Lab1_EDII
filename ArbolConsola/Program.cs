@@ -6,16 +6,38 @@ namespace ArbolConsola
     {
         static void Main(string[] args)
         {
-            ArbolB.ArbolB<int> arbol = new ArbolB.ArbolB<int>(3);
+            ArbolB.ArbolB<int> arbol = new ArbolB.ArbolB<int>(5);
 
-            arbol.Insertar(18);
-            arbol.Insertar(19);
-            arbol.Insertar(20);
-            arbol.Insertar(24);
-            arbol.Insertar(40);
-            arbol.Insertar(42);
+            arbol.Insertar(10);
+            arbol.Insertar(54);
+            arbol.Insertar(25);
+            arbol.Insertar(81);
+            arbol.Insertar(86);
+            arbol.Insertar(87);
+            arbol.Insertar(9);
+            arbol.Insertar(74);
+            arbol.Insertar(51);
+            arbol.Insertar(47);
+            arbol.Insertar(46);
+            arbol.Insertar(12);
+            arbol.Insertar(16);
+
+            arbol.Insertar(34);
+            arbol.Insertar(36);
+            arbol.Insertar(96);
             arbol.Insertar(44);
-            arbol.Insertar(44);
+            arbol.Insertar(6);
+            arbol.Insertar(19); 
+            arbol.Insertar(81);
+            arbol.Insertar(64);
+            arbol.Insertar(81);
+            arbol.Insertar(21);
+            arbol.Insertar(60);
+            arbol.Insertar(50);
+            arbol.Insertar(90);
+
+            arbol.Recorrido("In_Order");
+           // arbol.Insertar(44);
             /*arbol.Insertar(45);
             arbol.Insertar(80);
             arbol.Insertar(92);
