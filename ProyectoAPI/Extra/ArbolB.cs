@@ -6,7 +6,7 @@ using ProyectoAPI.Models;
 
 namespace ArbolB
 {
-    public class ArbolB<L> //where L : IComparable
+    public class ArbolB<L> 
     {
         public bool Mayor(L valor1, L valor2)
         {
@@ -37,7 +37,7 @@ namespace ArbolB
         private static int grado; //grado del arbol, se enviará dentro del constructor
         private NodoArbol<Pelicula> raiz;
         
-        private class NodoArbol<T> //where T : IComparable
+        private class NodoArbol<T> 
         {
             public bool Mayor(T valor1, T valor2)
             {
@@ -86,8 +86,7 @@ namespace ArbolB
                 bool insertar = true;
                 for (int i = 0; i < this.Listahoja.contador; i++)
                 {
-                    if (valor.Title == Listahoja.ObtenerValor(i).Title)//Iguales(valor, Listahoja.ObtenerValor(i)))//valor.CompareTo(Listahoja.ObtenerValor(i)) == 0)----------------
-                    {
+                    if (valor.Title == Listahoja.ObtenerValor(i).Title)                    {
                         insertar = false;
                         break;
                     }
@@ -112,7 +111,7 @@ namespace ArbolB
                 {
                     for (int j = i + 1; j < Listahoja.contador; j++)
                     {
-                        if (string.Compare(Listahoja.ObtenerValor(i).Title, Listahoja.ObtenerValor(j).Title) > 0)//Mayor(Listahoja.ObtenerValor(i), Listahoja.ObtenerValor(j)))//Listahoja.ObtenerValor(i).CompareTo(Listahoja.ObtenerValor(j)) > 0)
+                        if (string.Compare(Listahoja.ObtenerValor(i).Title, Listahoja.ObtenerValor(j).Title) > 0)
                         {
                             temporal = Listahoja.ExtraerEnPosicion(i).Valor;
                             Listahoja.InsertarEnPosicion(Listahoja.ExtraerEnPosicion(j - 1).Valor, i);
@@ -158,7 +157,7 @@ namespace ArbolB
                 bool posicion_valida = false;
                 for (int i = 0; i < temporal.Cant_valores; i++)
                 {
-                    if (string.Compare(valor.Title, temporal.Listahoja.ObtenerValor(i).Title) < 0)//!Mayor(valor, temporal.Listahoja.ObtenerValor(i)))//valor.CompareTo(temporal.Listahoja.ObtenerValor(i)) < 0)
+                    if (string.Compare(valor.Title, temporal.Listahoja.ObtenerValor(i).Title) < 0)
                     {
                         posicion_valida = true;
                         InsertarNodo(valor, temporal.hijo[i]);
@@ -188,7 +187,7 @@ namespace ArbolB
                     //encuentra la posición desde donde debe separar
                     for (int i = 0; i < temporal.padre.Cant_valores; i++)
                     {
-                        if (temporal.padre.Listahoja.ObtenerValor(i).Title == valor_medio.Title)//Iguales(temporal.padre.Listahoja.ObtenerValor(i), valor_medio))//temporal.padre.Listahoja.ObtenerValor(i).CompareTo(valor_medio) == 0)
+                        if (temporal.padre.Listahoja.ObtenerValor(i).Title == valor_medio.Title)
                         {
                             posicion = i;
                         }

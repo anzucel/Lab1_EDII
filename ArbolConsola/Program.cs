@@ -76,45 +76,6 @@ namespace ArbolConsola
             ////arbol.eliminar(24);
 
             arbol.Imprimir();
-
-            /*int opcion, grado, cant_datos;
-
-            Console.WriteLine("Árbol B");
-            Console.WriteLine("Seleccione una opción");
-            Console.WriteLine("1. Insertar");
-            Console.WriteLine("2. Buscar");
-            Console.WriteLine("3. Eliminar");
-            opcion = int.Parse(Console.ReadLine());
-
-            switch (opcion)
-            {
-                case 1:
-                    int numero, contador = 1;
-                    Console.WriteLine("Ingrese grado del árbol");
-                    grado = int.Parse(Console.ReadLine());
-                    Console.WriteLine("Ingrese cantidad de datos que contendrá el árbol");
-                    cant_datos = int.Parse(Console.ReadLine());
-                    arbol = new ArbolB.ArbolB<int>(grado);
-                    while (contador <= cant_datos)
-                    {
-                        Console.WriteLine("Dato " + contador + ":");
-                        numero = int.Parse(Console.ReadLine());
-                        arbol.Insertar(numero);
-                        contador++;
-                    }
-                    arbol.Imprimir();
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                default:
-                    break;
-            }
-            */
-
-            //arbol.Imprimir();
-
             Console.ReadKey();
         }
     }
