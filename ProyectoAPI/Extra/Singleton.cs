@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ProyectoAPI;
-using ArbolB;
 using ProyectoAPI.Models;
+using ProyectoAPI.Extra;
 
 namespace ProyectoAPI.Extra
 {
@@ -12,7 +12,7 @@ namespace ProyectoAPI.Extra
     {
         private readonly static Singleton instance = new Singleton();
         int grado = 3;
-        public ArbolB<Pelicula> ABPeliculas;
+        public ArbolB.ArbolB<Pelicula> ABPeliculas;
         ListaDobleEnlace.ListaDoble<Pelicula> ListaPeliculas;
 
         private Singleton()

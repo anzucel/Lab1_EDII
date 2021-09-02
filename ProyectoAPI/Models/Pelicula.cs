@@ -8,10 +8,10 @@ namespace ProyectoAPI.Models
     public class Pelicula
     {
         public string Director { get; set; }
-        public double IMDbRating { get; set; }
-        public string Genero { get; set; }
-        public string Estreno { get; set; }
-        public int RTM { get; set; }
-        public string Titulo { get; set; }
+        public float IMDbRating { get; set; }
+        public string Genre { get; set; }
+        public string ReleaseDate { get; set; }
+        public int RottenTomatoesRating { get; set; }
+        public string Title { get; set; }
     }
 }

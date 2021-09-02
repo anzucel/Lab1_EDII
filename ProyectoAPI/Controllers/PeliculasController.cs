@@ -18,49 +18,8 @@ namespace ProyectoAPI.Controllers
     [ApiController]
     public class PeliculasController : ControllerBase
     {
-        /*public static IWebHostEnvironment WebEnvironment; 
-        public PeliculasController(IWebHostEnvironment web_environment)
-        {
-            WebEnvironment = web_environment;
-        }
-
-        public class SubirArchivo
-        {
-            public IFormFile File { get; set; } //interface IformFile representa archivo enviado con HttpRequest
-        }
-
-        [HttpPost]
-        public async Task<string> Post(SubirArchivo archivo_nuevo) //Task, operación que no devuelve un valor, se ejecuta de manera asincrónica
-        { 
-            try
-            {
-                if (archivo_nuevo.File.Length > 0) //archivo > 0 bytes
-                {
-                    if (!Directory.Exists(WebEnvironment.WebRootPath + "\\JsonFile\\"))  //ruta se refiere a directorio existente en disco
-                    {
-                        Directory.CreateDirectory(WebEnvironment.WebRootPath + "\\JsonFile\\"); //crea nueva ruta 
-                    }
-                    using (FileStream fileStream = System.IO.File.Create(WebEnvironment.WebRootPath + "\\JsonFile\\" + archivo_nuevo.File.FileName))
-                    {
-                        archivo_nuevo.File.CopyTo(fileStream);
-                        fileStream.Flush(); //datos en memoria volatil los pone en el archivo
-                        return "\\JsonFile\\" + archivo_nuevo.File.FileName;
-                    }
-                }
-                else
-                {
-                    return "Error";
-                }
-            }
-            catch (Exception e)
-            {
-                return e.Message.ToString();
-            }
-        }*/
-
-
         // GET: api/<Pelicula> 
-        /*[HttpGet]
+        [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1" };
@@ -71,7 +30,7 @@ namespace ProyectoAPI.Controllers
         public string Get(int id)
         {
             return "value";
-        }*/
+        }
 
         // POST api/<Pelicula>
         [HttpPost]
@@ -90,21 +49,39 @@ namespace ProyectoAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult PostGrado([FromForm] IFormFile File)
+        [Route ("populate")]
+        public IActionResult PostBody([FromBody] Models.Pelicula pelicula)
+        {
+            try
+            {
+                Pelicula nuevo = pelicula;
+                Singleton.Instance.ABPeliculas.Insertar(nuevo);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+
+        [HttpPost]
+        [Route ("import")]
+        public IActionResult PostFile([FromForm] IFormFile File)
         {
             using var archivo = new MemoryStream();
             try
             {
                 File.CopyToAsync(archivo);
-                var cadena = Encoding.ASCII.GetString(archivo.ToArray());
-                var pelicula = JsonConvert.DeserializeObject<ListaDobleEnlace.ListaDoble<Pelicula>>(cadena);
-                foreach (var nuevo in pelicula)
+                var coleccion = Encoding.ASCII.GetString(archivo.ToArray());
+                var listaPeliculas = JsonConvert.DeserializeObject<List<Pelicula>>(coleccion);
+                foreach (var nuevo in listaPeliculas)
                 {
                     Singleton.Instance.ABPeliculas.Insertar(nuevo);
                 }
                 return Ok();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
