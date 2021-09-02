@@ -716,7 +716,7 @@ namespace ArbolB
         {
             for (int i = 0; i < Padre.Cant_valores; i++)
             {
-                if (Mayor(Padre.Listahoja.ObtenerValor(i), valor))//Padre.Listahoja.ObtenerValor(i).CompareTo(valor) > 0)
+                if (Padre.Listahoja.ObtenerValor(i).CompareTo(valor) > 0)
                 {
                     return i;
                 }
