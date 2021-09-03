@@ -377,23 +377,33 @@ namespace ArbolB
         //Empieza la parte de eliminación
 
 
-        public void eliminar(string Title)
+        public bool eliminar(string Title)
         {
 
             Pelicula Valor = InOrderTitle(raiz, Title);
-            NodoArbol<Pelicula> vervalor = raiz;
-            NodoArbol<Pelicula> NODO_A = EliminarNodo(Valor, raiz);
 
-
-            while (NODO_A.padre != null)
+            if(Valor.Title != null)
             {
-                if (NODO_A.padre != null)
-                {
-                    NODO_A = Verificacion_CantMin(NODO_A.padre);
-                }
-            }
+                NodoArbol<Pelicula> vervalor = raiz;
+                NodoArbol<Pelicula> NODO_A = EliminarNodo(Valor, raiz);
 
-            return;
+
+                while (NODO_A.padre != null)
+                {
+                    if (NODO_A.padre != null)
+                    {
+                        NODO_A = Verificacion_CantMin(NODO_A.padre);
+                    }
+                }
+                return true ;
+            }
+            else
+            {
+                return false;
+            }
+            
+
+           
         }
 
 
@@ -405,6 +415,7 @@ namespace ArbolB
                 if (Raiz.hijo[i] != null)
                 {
                     pelicula = InOrderTitle(Raiz.hijo[i], Title);
+                    if(pelicula.Title != null) { break; }
                     if (Raiz.Cant_valores == i) { break; }
                     if (Raiz.Listahoja.ObtenerValor(i).Title == Title)
                     {
@@ -547,51 +558,71 @@ namespace ArbolB
                     {
                         if (Raiz_P.Listahoja.ObtenerValor(i).Title.CompareTo(valor.Title) == 0)
                         {
-
-
-                            if (Raiz_P.hijo[i].Cant_valores > (grado - 1) / 2)//Caso en el que hermano izquierdo va a prestar
+                            if (Raiz_P == raiz)//Si es raíz
                             {
+                                Pelicula Temporal = BuscarmM(i, Raiz_P);//BUSCAR EL MAYOR DE LOS MENORES
+                                Pelicula Temporal2 = Raiz_P.Listahoja.ObtenerValor(i);
 
-                                Pelicula temporal = Raiz_P.hijo[i].Listahoja.ObtenerValor(Raiz_P.hijo[i].Cant_valores - 1);
-                                Raiz_P.Listahoja.ObtenerValor(i, temporal);
-                                Raiz_P.hijo[i].Listahoja.ExtraerFinal();
-                                Raiz_P.hijo[i].Cant_valores = Raiz_P.hijo[i].Listahoja.contador;
+                                eliminar(Temporal.Title);
+                                Nodo<Pelicula> Borrar = InOrderRaiz(raiz, Temporal2);
+
+                                Borrar.Valor = Temporal;
+
+                                encontrado = true;
+                                return Raiz_P;
+                                //Raiz_P.Listahoja.ObtenerValor(i, Temporal);
+
+
+
 
                             }
                             else
                             {
-                                if (Raiz_P.hijo[i + 1].Cant_valores > (grado - 1) / 2) //Caso en el que hermano derecho va a prestar
+
+                                if (Raiz_P.hijo[i].Cant_valores > (grado - 1) / 2)//Caso en el que hermano izquierdo va a prestar
                                 {
-                                    Pelicula temporal = Raiz_P.hijo[i + 1].Listahoja.ObtenerValor(0);
+
+                                    Pelicula temporal = Raiz_P.hijo[i].Listahoja.ObtenerValor(Raiz_P.hijo[i].Cant_valores - 1);
                                     Raiz_P.Listahoja.ObtenerValor(i, temporal);
-                                    Raiz_P.hijo[i + 1].Listahoja.ExtraerInicio();
-                                    Raiz_P.hijo[i + 1].Cant_valores = Raiz_P.hijo[i + 1].Listahoja.contador;
+                                    Raiz_P.hijo[i].Listahoja.ExtraerFinal();
+                                    Raiz_P.hijo[i].Cant_valores = Raiz_P.hijo[i].Listahoja.contador;
 
                                 }
-                                else//caso que no este en la orilla
+                                else
                                 {
-                                    Pelicula Temporal = Raiz_P.hijo[i].Listahoja.ObtenerValor(Raiz_P.hijo[i].Cant_valores - 1); //extrae el ultimo valor de la lista
-                                    Raiz_P.Listahoja.ObtenerValor(i, Temporal);
-
-                                    Raiz_P = Raiz_P.hijo[i];
-                                    valor = Temporal;
-
-                                    if (i == 0)
+                                    if (Raiz_P.hijo[i + 1].Cant_valores > (grado - 1) / 2) //Caso en el que hermano derecho va a prestar
                                     {
-                                        Raiz_P = UnionOrillaiz(i, Raiz_P, i, valor);
-                                        return Raiz_P;
+                                        Pelicula temporal = Raiz_P.hijo[i + 1].Listahoja.ObtenerValor(0);
+                                        Raiz_P.Listahoja.ObtenerValor(i, temporal);
+                                        Raiz_P.hijo[i + 1].Listahoja.ExtraerInicio();
+                                        Raiz_P.hijo[i + 1].Cant_valores = Raiz_P.hijo[i + 1].Listahoja.contador;
+
                                     }
-                                    else
+                                    else//caso que no este en la orilla
                                     {
+                                        Pelicula Temporal = Raiz_P.hijo[i].Listahoja.ObtenerValor(Raiz_P.hijo[i].Cant_valores - 1); //extrae el ultimo valor de la lista
+                                        Raiz_P.Listahoja.ObtenerValor(i, Temporal);
 
-                                        Raiz_P = UnionMedio(i, Raiz_P, i, valor);
-                                        return Raiz_P;
+                                        Raiz_P = Raiz_P.hijo[i];
+                                        valor = Temporal;
 
+                                        if (i == 0)
+                                        {
+                                            Raiz_P = UnionOrillaiz(i, Raiz_P, i, valor);
+                                            return Raiz_P;
+                                        }
+                                        else
+                                        {
+
+                                            Raiz_P = UnionMedio(i, Raiz_P, i, valor);
+                                            return Raiz_P;
+
+                                        }
                                     }
                                 }
+                                encontrado = true;
+                                return Raiz_P;
                             }
-                            encontrado = true;
-                            return Raiz_P;
                         }
 
                     }
@@ -632,6 +663,58 @@ namespace ArbolB
 
 
         //metodos utilizados para distintos procesos como uniones prestamos, busquedas de padres y más...
+
+        private Nodo<Pelicula> InOrderRaiz(NodoArbol<Pelicula> Raiz, Pelicula Valor)
+        {
+            Nodo<Pelicula> NodoR = new Nodo<Pelicula>();
+            NodoR = null;
+            for (int i = 0; i < grado; i++)
+            {
+                if (Raiz.hijo[i] != null)
+                {
+                    NodoR = InOrderRaiz(Raiz.hijo[i], Valor);
+                    if (NodoR != null) { break; }
+                    if (Raiz.Cant_valores == i) { break; }
+                    if (Raiz.Listahoja.ObtenerValor(i).Title.CompareTo(Valor.Title) == 0)
+                    {
+
+                        return Raiz.Listahoja.ObtenerNodo(i);
+                    }
+
+
+                }
+                else
+                {
+                    for (int j = 0; j < Raiz.Cant_valores; j++)
+                    {
+                        if (Raiz.Listahoja.ObtenerValor(j).Title.CompareTo(Valor.Title) == 0)
+                        {
+
+                            return Raiz.Listahoja.ObtenerNodo(j);
+                        }
+
+
+                    }
+                    break;
+                }
+
+            }
+            return NodoR;
+        }
+        private Pelicula BuscarmM(int pos, NodoArbol<Pelicula> Valor)
+        {
+            if (Valor.hoja == false)
+            {
+                return BuscarmM(Valor.Cant_valores, Valor.hijo[pos]);
+
+            }
+            else
+            {
+
+                return Valor.Listahoja.ObtenerValor(Valor.Cant_valores - 1);
+            }
+
+        }
 
         private NodoArbol<Pelicula> Verificacion_CantMin(NodoArbol<Pelicula> Raiz_P)
         {
@@ -885,6 +968,10 @@ namespace ArbolB
             }
 
             Raiz_P.padre.hijo[cont] = null;
+            if (Raiz_P.padre.Cant_valores == 0)
+            {
+                raiz = Raiz_P;
+            }
 
             return Raiz_P;
         }
@@ -969,19 +1056,26 @@ namespace ArbolB
             return Raiz_P;
         }
 
-        public ListaDoble<Pelicula> Recorrido(string Tipo)
+
+        public List<Pelicula> recorrido(string Tipo)
         {
-            ListaDoble<Pelicula> Recorrido = new ListaDoble<Pelicula>();
+            List<Pelicula>  Recorrido = new List<Pelicula>();
+           // Recorrido = null;
             switch (Tipo)
             {
-                case "In_Order":
+                case "InOrder":
                     InOrder(raiz, ref Recorrido);
                     break;
 
-                case "Pre_Order":
+                case "PreOrder":
+                    PreOrder(raiz, ref Recorrido);
+
                     break;
 
-                case "Post_Order":
+                case "PostOrder":
+                    PostOrder(raiz, ref Recorrido);
+                    break;
+                default:
                     break;
 
             }
@@ -991,7 +1085,7 @@ namespace ArbolB
         }
 
         //Recorridos
-        void InOrder(NodoArbol<Pelicula> Raiz, ref ListaDoble<Pelicula> Recorrido)
+        void InOrder(NodoArbol<Pelicula> Raiz, ref List<Pelicula> Recorrido)
         {
             for (int i = 0; i < grado; i++)
             {
@@ -999,43 +1093,85 @@ namespace ArbolB
                 {
                     InOrder(Raiz.hijo[i], ref Recorrido);
                     if (Raiz.Cant_valores == i) { break; }
-                    Recorrido.InsertarFinal(Raiz.Listahoja.ObtenerValor(i));
+                    Recorrido.Add(Raiz.Listahoja.ObtenerValor(i));
 
                 }
                 else
                 {
                     for (int j = 0; j < Raiz.Cant_valores; j++)
                     {
-                        Recorrido.InsertarFinal(Raiz.Listahoja.ObtenerValor(j));
+                        Recorrido.Add(Raiz.Listahoja.ObtenerValor(j));
 
                     }
                     break;
                 }
 
             }
+        }
 
-            void PostOrder(NodoArbol<L> Raiz, ref ListaDoble<L> Recorrido)
+        void PostOrder(NodoArbol<Pelicula> Raiz, ref List<Pelicula> Recorrido)
+        {
+
+            for (int i = 0; i <= Raiz.Cant_valores; i++)
             {
+                if (Raiz.hijo[i] != null)
+                {
+
+                    PostOrder(Raiz.hijo[i], ref Recorrido);
+
+                    for (int j = 0; j < Raiz.hijo[i].Cant_valores; j++)
+                    {
+                        Recorrido.Add(Raiz.hijo[i].Listahoja.ObtenerValor(j));
+                    }
+                    if (Raiz == raiz && Raiz.Cant_valores == i)
+                    {
+                        for (int j = 0; j < Raiz.Cant_valores; j++)
+                        {
+                            Recorrido.Add(Raiz.Listahoja.ObtenerValor(j));
+                        }
+                    }
+
+                    if (Raiz.Cant_valores == i) { break; }
+
+                }
+                else
+                {
+                    break;
+                }
 
             }
-
-            void PreOrder(NodoArbol<L> Raiz, ref ListaDoble<L> Recorrido)
-            {
-
-            }
-
-
-
-
-            //    ListaDoble<L> Recorrido = new ListaDoble<L>();
-            //    NodoArbol<L> Pivote = raiz;
-
-            //    while (Pivote.hoja == false) //Ubica el primer nodo
-            //    {
-            //        Pivote = Pivote.hijo[0];
-            //    }
 
         }
+
+
+        void PreOrder(NodoArbol<Pelicula> Raiz, ref List<Pelicula> Recorrido)
+        {
+            for (int i = 0; i <= Raiz.Cant_valores; i++)
+            {
+                if (Raiz.hijo[i] != null)
+                {
+                    if (Raiz.Cant_valores != i)
+                    {
+                        Recorrido.Add(Raiz.Listahoja.ObtenerValor(i));
+                    }
+                    PreOrder(Raiz.hijo[i], ref Recorrido);
+                    if (Raiz.Cant_valores == i) { break; }
+                }
+                else
+                {
+                    for (int j = 0; j < Raiz.Cant_valores; j++)
+                    {
+                        Recorrido.Add(Raiz.Listahoja.ObtenerValor(j));
+
+                    }
+                    break;
+                }
+
+            }
+        }
+
     }
 
 }
+
+     

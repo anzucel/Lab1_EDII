@@ -26,11 +26,23 @@ namespace ProyectoAPI.Controllers
         }
 
         // GET api/<Pelicula>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+
+        [HttpGet("{traversal}")]
+        public ActionResult GetByRecorrido([FromRoute] string traversal)
         {
-            return "value";
+            try
+            {
+                List<Pelicula> result = Singleton.Instance.ABPeliculas.recorrido(traversal);
+                if (result.Count == 0) return NotFound();
+                return Ok(result);
+            }
+            
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
+
 
         // POST api/<Pelicula>
         [HttpPost]
@@ -50,7 +62,7 @@ namespace ProyectoAPI.Controllers
 
         [HttpPost]
         [Route ("populate")]
-        public IActionResult PostBody([FromBody] Models.Pelicula pelicula)
+        public IActionResult PostBody([FromBody] IEnumerable<Pelicula> pelicula)
         {
             try
             {
@@ -58,6 +70,7 @@ namespace ProyectoAPI.Controllers
                 {
                     Singleton.Instance.ABPeliculas.Insertar(nuevo);
                 }
+                // Singleton.Instance.ABPeliculas.Insertar(pelicula);
                 return Ok();
             }
             catch (Exception)
@@ -100,9 +113,12 @@ namespace ProyectoAPI.Controllers
         {
             try
             {
-                Pelicula nuevo = new Pelicula();
-                Singleton.Instance.ABPeliculas.eliminar(id);
-                return Ok();
+                bool StatusCode = false;              
+               StatusCode = Singleton.Instance.ABPeliculas.eliminar(id);
+                if(StatusCode == true) {return Ok();}
+                else{return NotFound();}
+                
+                
             }
             catch (Exception)
             {
