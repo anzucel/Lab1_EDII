@@ -49,21 +49,22 @@ namespace ProyectoAPI.Controllers
         }
 
         [HttpPost]
-        [Route("populate")]
+        [Route ("populate")]
         public IActionResult PostBody([FromBody] Models.Pelicula pelicula)
         {
             try
             {
-                Pelicula nuevo = pelicula;
-                Singleton.Instance.ABPeliculas.Insertar(nuevo);
+                foreach (var nuevo in pelicula)
+                {
+                    Singleton.Instance.ABPeliculas.Insertar(nuevo);
+                }
                 return Ok();
             }
             catch (Exception)
             {
-                return BadRequest();
+                return StatusCode(500);
             }
         }
-
 
         [HttpPost]
         [Route("import")]
