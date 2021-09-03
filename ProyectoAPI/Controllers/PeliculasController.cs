@@ -49,25 +49,24 @@ namespace ProyectoAPI.Controllers
         }
 
         [HttpPost]
-        [Route ("populate")]
-        public IActionResult Post([FromBody] IEnumerable<Pelicula> peliculas)
+        [Route("populate")]
+        public IActionResult PostBody([FromBody] Models.Pelicula pelicula)
         {
             try
             {
-                foreach (var nuevo in peliculas)
-                {
-                    Singleton.Instance.ABPeliculas.Insertar(nuevo);
-                }
+                Pelicula nuevo = pelicula;
+                Singleton.Instance.ABPeliculas.Insertar(nuevo);
                 return Ok();
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return BadRequest();
             }
         }
 
+
         [HttpPost]
-        [Route ("import")]
+        [Route("import")]
         public IActionResult PostFile([FromForm] IFormFile File)
         {
             using var archivo = new MemoryStream();
@@ -94,11 +93,21 @@ namespace ProyectoAPI.Controllers
             Singleton.Instance.ABPeliculas = null;
         }
 
-        // DELETE api/<Pelicula>/5
+        //DELETE api/<Pelicula>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete([FromRoute] string id)
         {
-            Singleton.Instance.ABPeliculas.eliminar(id);
+            try
+            {
+                Pelicula nuevo = new Pelicula();
+                Singleton.Instance.ABPeliculas.eliminar(id);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
+
     }
 }

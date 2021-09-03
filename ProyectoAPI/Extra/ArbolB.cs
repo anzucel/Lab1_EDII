@@ -374,8 +374,10 @@ namespace ArbolB
             return temporal;
         }
 
-        public void eliminar(Pelicula Valor)
+        public void eliminar(string Title)
         {
+
+            Pelicula Valor = InOrderTitle(raiz, Title);
             NodoArbol<Pelicula> vervalor = raiz;
             NodoArbol<Pelicula> NODO_A = EliminarNodo(Valor, raiz);
 
@@ -391,6 +393,42 @@ namespace ArbolB
              return;
         }
 
+
+        private Pelicula InOrderTitle(NodoArbol<Pelicula> Raiz, string Title)
+        {
+            Pelicula pelicula = new Pelicula();
+            for (int i = 0; i < grado; i++)
+            {
+                if (Raiz.hijo[i] != null)
+                {
+                    pelicula= InOrderTitle(Raiz.hijo[i], Title);
+                    if (Raiz.Cant_valores == i) { break; }
+                    if (Raiz.Listahoja.ObtenerValor(i).Title == Title)
+                    {
+
+                        return Raiz.Listahoja.ObtenerValor(i);
+                    }
+
+
+                }
+                else
+                {
+                    for (int j = 0; j < Raiz.Cant_valores; j++)
+                    {
+                        if (Raiz.Listahoja.ObtenerValor(j).Title == Title)
+                        {
+
+                            return Raiz.Listahoja.ObtenerValor(j);
+                        }
+
+
+                    }
+                    break ;
+                }
+                
+            }
+            return pelicula;
+        }
 
         private NodoArbol<Pelicula> EliminarNodo(Pelicula valor, NodoArbol<Pelicula> Raiz_P)
         {
